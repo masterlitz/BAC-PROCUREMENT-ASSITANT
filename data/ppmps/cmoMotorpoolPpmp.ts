@@ -1,0 +1,65 @@
+import { SavedPpmp } from '../../types';
+
+export const cmoMotorpoolPpmp: SavedPpmp = {
+  name: "CMO - Motorpool Division",
+  headerData: {
+    ppmpNo: 'CMO-MOTORPOOL-2026-001',
+    fiscalYear: '2026',
+    endUser: "Bacolod City - CMO - Motorpool Division",
+    status: 'final',
+  },
+  items: [
+    {
+      id: 30001,
+      office: "CMO - Motorpool Division",
+      generalDescription: "Office Supplies and Other Supplies & Materials",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "SVP / Shopping",
+      preProcCon: "No",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "MOOE",
+      estimatedBudget: 964000.00, // 120k + 844k
+      supportingDocuments: "PR",
+      remarks: "Consolidated all supplies expenses.",
+    },
+    {
+      id: 30002,
+      office: "CMO - Motorpool Division",
+      generalDescription: "MOOE (Fuel, R&M, Insurance, etc.)",
+      projectType: "Services / Goods",
+      quantitySize: "1 lot",
+      procurementMode: "Competitive Bidding / SVP",
+      preProcCon: "Yes",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "MOOE",
+      estimatedBudget: 7464000.00, // Sum of all other MOOE
+      supportingDocuments: "Contracts, Billings, PRs",
+      remarks: "Consolidated operational expenses.",
+    },
+    {
+      id: 30003,
+      office: "CMO - Motorpool Division",
+      generalDescription: "Capital Outlay - Equipment",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "Competitive Bidding",
+      preProcCon: "Yes",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "Capital Outlay",
+      estimatedBudget: 13000000.00,
+      supportingDocuments: "PR, Tech Specs",
+      remarks: "For heavy equipment and other machinery.",
+    },
+  ],
+  footerData: {
+    preparedBy: { name: 'ENGR. LOBEN RAFAEL D. CEBALLOS', position: 'OIC - City Engineer', date: 'N/A' },
+    submittedBy: { name: 'MARIA IMELDA A. WILLIAMS', position: 'City Budget Officer', date: 'N/A' },
+  },
+};

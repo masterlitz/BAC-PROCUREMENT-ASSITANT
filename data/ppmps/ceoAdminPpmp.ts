@@ -1,0 +1,66 @@
+
+import { SavedPpmp } from '../../types';
+
+export const ceoAdminPpmp: SavedPpmp = {
+  name: "CEO-Administrative Division",
+  headerData: {
+    ppmpNo: 'CEO-ADMIN-2026-001',
+    fiscalYear: '2026',
+    endUser: "Bacolod City - City Engineer's Office - Administrative Division",
+    status: 'final',
+  },
+  items: [
+    {
+      id: 46001,
+      office: "CEO-Administrative Division",
+      generalDescription: "Office Supplies and Materials Expenses",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "SVP / Shopping",
+      preProcCon: "No",
+      procurementStart: "Jul",
+      procurementEnd: "Aug",
+      deliveryImplementation: "3rd Quarter",
+      sourceOfFunds: "GAA",
+      estimatedBudget: 230970.50, // 170595.20 + 60375.30
+      supportingDocuments: "PR",
+      remarks: "Consolidated from Office Supplies and Other Supplies & Materials.",
+    },
+    {
+      id: 46002,
+      office: "CEO-Administrative Division",
+      generalDescription: "Operational Expenses (Telephone, R&M, Travel, Training, Fuel)",
+      projectType: "Services / Goods",
+      quantitySize: "1 lot",
+      procurementMode: "SVP / Direct Contracting",
+      preProcCon: "No",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "GAA",
+      estimatedBudget: 838000.00,
+      supportingDocuments: "PR, Billings, Contracts",
+      remarks: "Consolidated various operational expenses.",
+    },
+    {
+      id: 46003,
+      office: "CEO-Administrative Division",
+      generalDescription: "Capital Outlay - Special Purpose Appropriation",
+      projectType: "Infrastructure / Goods",
+      quantitySize: "1 lot",
+      procurementMode: "Competitive Bidding",
+      preProcCon: "Yes",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "CY 2026",
+      sourceOfFunds: "20% Development Fund",
+      estimatedBudget: 47600000.00,
+      supportingDocuments: "PR, Plans, Tech Specs",
+      remarks: "For various infrastructure and equipment projects.",
+    },
+  ],
+  footerData: {
+    preparedBy: { name: 'ENGR. LOBEN RAFAEL D. CEBALLOS', position: 'OIC - City Engineer', date: 'N/A' },
+    submittedBy: { name: 'MARIA IMELDA A. WILLIAMS', position: 'City Budget Officer', date: 'N/A' },
+  },
+};

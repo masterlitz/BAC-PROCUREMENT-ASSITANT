@@ -1,0 +1,98 @@
+
+import { SavedPpmp } from '../../types';
+
+export const tourism2026TDFPpmp: SavedPpmp = {
+  name: "Tourism (TDF 2026)",
+  headerData: {
+    ppmpNo: 'TDF-2026-001',
+    fiscalYear: '2026',
+    endUser: "Bacolod City - Tourism Development Office",
+    status: 'final',
+  },
+  items: [
+    {
+      id: 17001,
+      office: "Tourism (TDF 2026)",
+      generalDescription: "Procurement of Office and Other Supplies",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "SVP / Shopping",
+      preProcCon: "No",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "Tourism Development Fund",
+      estimatedBudget: 400000.00,
+      supportingDocuments: "PR",
+      remarks: "Consolidated from two separate PPMP documents for the same office and year.",
+    },
+  ],
+  footerData: {
+    preparedBy: { name: 'MA. TERESA Q. MANALILI', position: 'Chief Tourism Operations Officer', date: 'N/A' },
+    submittedBy: { name: 'MARIA IMELDA A. WILLIAMS', position: 'City Budget Officer', date: 'N/A' },
+  },
+};
+
+export const tourism2026GFPpmp: SavedPpmp = {
+    name: "Tourism (GF 2026)",
+    headerData: {
+      ppmpNo: 'GF-TOURISM-2026-001',
+      fiscalYear: '2026',
+      endUser: "Bacolod City - Tourism Development Office",
+      status: 'final',
+    },
+    items: [
+      {
+        id: 17002,
+        office: "Tourism (GF 2026)",
+        generalDescription: "Operational Expenses (Travel, Training, Utilities, Ads, R&M, Fuel)",
+        projectType: "Services / Goods",
+        quantitySize: "1 lot",
+        procurementMode: "SVP / Direct Contracting",
+        preProcCon: "No",
+        procurementStart: "Jan",
+        procurementEnd: "Dec",
+        deliveryImplementation: "As needed",
+        sourceOfFunds: "General Fund",
+        estimatedBudget: 1830000.00,
+        supportingDocuments: "PR, Billings, Contracts",
+        remarks: "Consolidated MOOE from General Fund.",
+      },
+      {
+        id: 17003,
+        office: "Tourism (GF 2026)",
+        generalDescription: "Office and Other Supplies",
+        projectType: "Goods",
+        quantitySize: "1 lot",
+        procurementMode: "SVP",
+        preProcCon: "No",
+        procurementStart: "Jan",
+        procurementEnd: "Dec",
+        deliveryImplementation: "Quarterly",
+        sourceOfFunds: "General Fund",
+        estimatedBudget: 400000.00,
+        supportingDocuments: "PR",
+        remarks: "Supplies funded from General Fund.",
+      },
+      {
+        id: 17004,
+        office: "Tourism (GF 2026)",
+        generalDescription: "Reserve Fund (20%)",
+        projectType: "N/A",
+        quantitySize: "1 lot",
+        procurementMode: "N/A",
+        preProcCon: "",
+        procurementStart: "N/A",
+        procurementEnd: "N/A",
+        deliveryImplementation: "N/A",
+        sourceOfFunds: "General Fund",
+        estimatedBudget: 528000.00,
+        supportingDocuments: "N/A",
+        remarks: "20% Reserve as per PPMP.",
+      },
+    ],
+    footerData: {
+      preparedBy: { name: 'MA. TERESA Q. MANALILI', position: 'Chief Tourism Operations Officer', date: 'N/A' },
+      submittedBy: { name: 'MARIA IMELDA A. WILLIAMS', position: 'City Budget Officer', date: 'N/A' },
+    },
+  };

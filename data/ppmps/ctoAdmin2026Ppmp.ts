@@ -1,0 +1,66 @@
+
+import { SavedPpmp } from '../../types';
+
+export const ctoAdmin2026Ppmp: SavedPpmp = {
+  name: "CTO - Admin Division",
+  headerData: {
+    ppmpNo: 'CTO-ADMIN-2026-001',
+    fiscalYear: '2026',
+    endUser: "Bacolod City - City Treasurer's Office - Administrative Division",
+    status: 'final',
+  },
+  items: [
+    {
+      id: 32001,
+      office: "CTO - Admin Division",
+      generalDescription: "Office Supplies and Other Office Supplies",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "Shopping/Bidding",
+      preProcCon: "No",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "Quarterly",
+      sourceOfFunds: "MOOE",
+      estimatedBudget: 235960.00, // 160440 + 75520
+      supportingDocuments: "PR",
+      remarks: "Consolidated all office supplies from the PPMP.",
+    },
+    {
+      id: 32002,
+      office: "CTO - Admin Division",
+      generalDescription: "MOOE (Travel, Training, Utilities, Fuel, R&M, Insurance, etc.)",
+      projectType: "Services / Goods",
+      quantitySize: "1 lot",
+      procurementMode: "SVP / Direct Contracting",
+      preProcCon: "No",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "MOOE",
+      estimatedBudget: 1745000.00,
+      supportingDocuments: "Contracts, Billings, PRs",
+      remarks: "Consolidated all Maintenance and Other Operating Expenses.",
+    },
+    {
+      id: 32003,
+      office: "CTO - Admin Division",
+      generalDescription: "Capital Outlay (Office & ICT Equipment)",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "SVP",
+      preProcCon: "No",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "Capital Outlay",
+      estimatedBudget: 230000.00,
+      supportingDocuments: "PR, Tech Specs",
+      remarks: "For various office and IT equipment.",
+    },
+  ],
+  footerData: {
+    preparedBy: { name: 'ANALYN B. SUMABAYSAY', position: 'Administrative Officer V (Fiscal Examiner III)', date: 'N/A' },
+    submittedBy: { name: 'JOSE MARIA T. GECOSAL', position: 'Acting City Treasurer', date: 'N/A' },
+  },
+};

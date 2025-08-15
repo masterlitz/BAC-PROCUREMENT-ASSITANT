@@ -1,0 +1,102 @@
+import { MarketItem } from '../types';
+
+export const machineryRepairAndMaintenance: MarketItem[] = [
+    {
+        id: 81001,
+        name: "MX 61 FVBA Developer",
+        description: "A genuine developer unit for Sharp MX series digital multifunction printers. Essential for maintaining high-quality image production and ensuring crisp, clear prints.",
+        category: "Repair & Maintenance - Machinery & Equipment",
+        uacsCode: "50213050",
+        quantity: 100,
+        unit: "unit",
+        price: 8950.00,
+        referenceLinks: [],
+        itemCode: "RMT-DEV-MX61",
+        technicalSpecifications: "Type: Developer Unit\nCompatibility: Sharp MX-M623, MX-M753, and similar models\nColor: Black\nYield: High-volume yield for office environments",
+        imageUrl: "https://i.ibb.co/L5YwYgP/developer-unit.png"
+    },
+    {
+        id: 81002,
+        name: "BP-FV 200 Developer",
+        description: "Developer powder for BP series printers and copiers. Ensures proper toner adhesion and consistent print density.",
+        category: "Repair & Maintenance - Machinery & Equipment",
+        uacsCode: "50213050",
+        quantity: 100,
+        unit: "unit",
+        price: 3950.00,
+        referenceLinks: [],
+        itemCode: "RMT-DEV-BP200",
+        technicalSpecifications: "Type: Developer Powder\nCompatibility: Specific BP series copiers (e.g., BP-20M22)\nColor: Black",
+        imageUrl: "https://i.ibb.co/L5YwYgP/developer-unit.png"
+    },
+    {
+        id: 81003,
+        name: "MX-312 FR Drum kit",
+        description: "A complete photoreceptor drum kit for Sharp MX-312 series copiers. This replacement unit is critical for imaging and transferring the final print onto paper.",
+        category: "Repair & Maintenance - Machinery & Equipment",
+        uacsCode: "50213050",
+        quantity: 100,
+        unit: "unit",
+        price: 5000.00,
+        referenceLinks: [],
+        itemCode: "RMT-DRM-MX312FR",
+        technicalSpecifications: "Type: Drum Kit\nComponents: Photoreceptor Drum, Main Charge Unit\nCompatibility: Sharp MX-M262, MX-M312, MX-M352 series",
+        imageUrl: "https://i.ibb.co/jW7W5rX/drum-kit.png"
+    },
+    {
+        id: 81004,
+        name: "MX-312 FV Developer",
+        description: "Developer unit compatible with Sharp MX-312 series digital multifunction systems. Works in tandem with the toner to produce high-quality images.",
+        category: "Repair & Maintenance - Machinery & Equipment",
+        uacsCode: "50213050",
+        quantity: 100,
+        unit: "unit",
+        price: 3950.00,
+        referenceLinks: [],
+        itemCode: "RMT-DEV-MX312FV",
+        technicalSpecifications: "Type: Developer Unit\nCompatibility: Sharp MX-M262, MX-M312, MX-M352 series\nColor: Black",
+        imageUrl: "https://i.ibb.co/L5YwYgP/developer-unit.png"
+    },
+    {
+        id: 81005,
+        name: "AR-205 DR Drum kit",
+        description: "Replacement drum kit for Sharp AR-205 series copiers. This unit includes the OPC drum and other necessary components for refreshing the machine's imaging system.",
+        category: "Repair & Maintenance - Machinery & Equipment",
+        uacsCode: "50213050",
+        quantity: 100,
+        unit: "unit",
+        price: 8750.00,
+        referenceLinks: [],
+        itemCode: "RMT-DRM-AR205",
+        technicalSpecifications: "Type: Drum Kit\nCompatibility: Sharp AR-205, AR-M205, AR-M237, AR-M277 series\nYield: Approx. 50,000 pages",
+        imageUrl: "https://i.ibb.co/jW7W5rX/drum-kit.png"
+    },
+    {
+        id: 81006,
+        name: "Developer C/M/Y MX-60FVSA",
+        description: "A set of color developer units (Cyan, Magenta, Yellow) for high-end Sharp MX-60 series color multifunction printers.",
+        category: "Repair & Maintenance - Machinery & Equipment",
+        uacsCode: "50213050",
+        quantity: 50,
+        unit: "unit",
+        price: 99500.00,
+        referenceLinks: [],
+        itemCode: "RMT-DEV-MX60CMY",
+        technicalSpecifications: "Type: Color Developer Units (Set of 3)\nColors: Cyan, Magenta, Yellow\nCompatibility: Sharp MX-6050, MX-6070 and similar models",
+        imageUrl: "https://i.ibb.co/L5YwYgP/developer-unit.png"
+    },
+    {
+        id: 81007,
+        name: "MX-237 FT Toner Cartridge",
+        description: "Black toner cartridge for Sharp MX-237 series photocopiers, providing high-quality prints and reliable performance.",
+        category: "Repair & Maintenance - Machinery & Equipment",
+        uacsCode: "50213050",
+        quantity: 100,
+        unit: "unit",
+        price: 12950.00,
+        referenceLinks: [],
+        itemCode: "RMT-TNR-MX237",
+        technicalSpecifications: "Type: Toner Cartridge\nColor: Black\nCompatibility: Sharp AR-6020, AR-6023, AR-6026 series\nYield: Approx. 10,000 pages",
+        imageUrl: "https://i.ibb.co/h1gYyBq/brother-toner-compatible.png"
+    }
+];

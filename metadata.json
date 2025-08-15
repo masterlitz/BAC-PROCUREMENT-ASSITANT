@@ -1,0 +1,9 @@
+{
+  "name": "PA V3.1",
+  "description": "An interactive tool for Bacolod City to determine procurement modes, calculate timelines, and utilize AI for document processing based on Philippine government procurement laws.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "prompt": ""
+}

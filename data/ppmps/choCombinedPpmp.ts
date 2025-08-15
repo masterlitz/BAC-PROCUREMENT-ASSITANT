@@ -1,0 +1,98 @@
+
+import { SavedPpmp } from '../../types';
+
+export const choCombinedPpmp: SavedPpmp = {
+  name: "City Health Office (Combined)",
+  headerData: {
+    ppmpNo: 'CHO-COMBINED-2026-001',
+    fiscalYear: '2026',
+    endUser: "Bacolod City - City Health Office (Mental, Main, Lying-in)",
+    status: 'final',
+  },
+  items: [
+    {
+      id: 26001,
+      office: "City Health Office (Combined)",
+      generalDescription: "Drugs and Medicines",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "Competitive Bidding",
+      preProcCon: "Yes",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "Quarterly",
+      sourceOfFunds: "MOOE",
+      estimatedBudget: 29500000.00, // 3M + 25M + 1.5M
+      supportingDocuments: "PR, List of Medicines",
+      remarks: "Consolidated from Mental, CHO Budget, and Lying-In PPMPs.",
+    },
+    {
+      id: 26002,
+      office: "City Health Office (Combined)",
+      generalDescription: "Medical, Dental & Laboratory Supplies",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "Competitive Bidding",
+      preProcCon: "Yes",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "Quarterly",
+      sourceOfFunds: "MOOE",
+      estimatedBudget: 21500000.00, // 5M + 15.5M + 1M
+      supportingDocuments: "PR, Tech Specs",
+      remarks: "Consolidated from Mental, CHO Budget, and Lying-In PPMPs.",
+    },
+    {
+      id: 26003,
+      office: "City Health Office (Combined)",
+      generalDescription: "Other Supplies & Materials (Office, Food, Fuel, etc.)",
+      projectType: "Goods",
+      quantitySize: "1 lot",
+      procurementMode: "SVP / Shopping",
+      preProcCon: "No",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "MOOE",
+      estimatedBudget: 11000000.00, // Sum of Office, Food, Fuel, Other Supplies
+      supportingDocuments: "PR",
+      remarks: "Consolidated from Mental, CHO Budget, and Lying-In PPMPs.",
+    },
+    {
+      id: 26004,
+      office: "City Health Office (Combined)",
+      generalDescription: "Operational Expenses (Training, Utilities, R&M, etc.)",
+      projectType: "Services",
+      quantitySize: "1 lot",
+      procurementMode: "SVP / Direct Contracting",
+      preProcCon: "No",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "As needed",
+      sourceOfFunds: "MOOE",
+      estimatedBudget: 14755000.00, // Sum of Training, Water, R&M, Other M&O, etc.
+      supportingDocuments: "Contracts, Billings",
+      remarks: "Consolidated from Mental, CHO Budget, and Lying-In PPMPs.",
+    },
+    {
+      id: 26005,
+      office: "City Health Office (Combined)",
+      generalDescription: "Capital Outlay",
+      projectType: "Goods / Infrastructure",
+      quantitySize: "1 lot",
+      procurementMode: "Competitive Bidding",
+      preProcCon: "Yes",
+      procurementStart: "Jan",
+      procurementEnd: "Dec",
+      deliveryImplementation: "CY 2026",
+      sourceOfFunds: "Capital Outlay",
+      estimatedBudget: 61995000.00, // Sum of all Capital Outlay items
+      supportingDocuments: "PR, Tech Specs, Plans",
+      remarks: "Consolidated from Mental, CHO Budget, and Lying-In PPMPs.",
+    },
+  ],
+  footerData: {
+    preparedBy: { name: 'CHERIE ANN C. JALANDRA, RMT', position: 'Planning Officer II', date: 'Jul 14, 2025' },
+    submittedBy: { name: 'DR. MA. CARMELA P. GENSOLI, RMT', position: 'City Health Officer', date: 'Jul 14, 2025' },
+  },
+};
