@@ -2,11 +2,11 @@
 <img width="1200" height="475" alt="GHBanner" src="https://i.ibb.co/TBXvGw1L/Screenshot-2025-08-15-152016.png"
 </div>
 
-# Run and deploy your AI Studio app
+# test your  app
 
 This contains everything you need to run your app locally.
 
-View your app in AI Studio: https://pa-v3-1-1017015609395.us-west1.run.app/
+Visit the app : https://pa-v3-1-1017015609395.us-west1.run.app/
 
 # USER: demo   
 # PASSWORD: demo
