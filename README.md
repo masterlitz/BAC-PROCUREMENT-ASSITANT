@@ -8,8 +8,8 @@ This contains everything you need to run your app locally.
 
 View your app in AI Studio: https://pa-v3-1-1017015609395.us-west1.run.app/
 
-# USER: admin
-# PASSWORD: admin
+# USER: demo   
+# PASSWORD: demo
 
 
 ## Run Locally
