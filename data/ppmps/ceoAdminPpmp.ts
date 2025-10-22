@@ -6,61 +6,77 @@ export const ceoAdminPpmp: SavedPpmp = {
   headerData: {
     ppmpNo: 'CEO-ADMIN-2026-001',
     fiscalYear: '2026',
-    endUser: "Bacolod City - City Engineer's Office - Administrative Division",
+    endUser: "City Engineer's Office - Administrative Division",
     status: 'final',
   },
   items: [
-    {
-      id: 46001,
-      office: "CEO-Administrative Division",
-      generalDescription: "Office Supplies and Materials Expenses",
-      projectType: "Goods",
-      quantitySize: "1 lot",
-      procurementMode: "SVP / Shopping",
-      preProcCon: "No",
-      procurementStart: "Jul",
-      procurementEnd: "Aug",
-      deliveryImplementation: "3rd Quarter",
-      sourceOfFunds: "GAA",
-      estimatedBudget: 230970.50, // 170595.20 + 60375.30
-      supportingDocuments: "PR",
-      remarks: "Consolidated from Office Supplies and Other Supplies & Materials.",
-    },
-    {
-      id: 46002,
-      office: "CEO-Administrative Division",
-      generalDescription: "Operational Expenses (Telephone, R&M, Travel, Training, Fuel)",
-      projectType: "Services / Goods",
-      quantitySize: "1 lot",
-      procurementMode: "SVP / Direct Contracting",
-      preProcCon: "No",
-      procurementStart: "Jan",
-      procurementEnd: "Dec",
-      deliveryImplementation: "As needed",
-      sourceOfFunds: "GAA",
-      estimatedBudget: 838000.00,
-      supportingDocuments: "PR, Billings, Contracts",
-      remarks: "Consolidated various operational expenses.",
-    },
-    {
-      id: 46003,
-      office: "CEO-Administrative Division",
-      generalDescription: "Capital Outlay - Special Purpose Appropriation",
-      projectType: "Infrastructure / Goods",
-      quantitySize: "1 lot",
-      procurementMode: "Competitive Bidding",
-      preProcCon: "Yes",
-      procurementStart: "Jan",
-      procurementEnd: "Dec",
-      deliveryImplementation: "CY 2026",
-      sourceOfFunds: "20% Development Fund",
-      estimatedBudget: 47600000.00,
-      supportingDocuments: "PR, Plans, Tech Specs",
-      remarks: "For various infrastructure and equipment projects.",
-    },
+    // OFFICE SUPPLIES EXPENSES
+    { id: 46001, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Air Freshener, Scented Gel", quantity: 40, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 8600.00, schedule: { jan: 0, feb: 4300, mar: 0, apr: 0, may: 0, jun: 0, jul: 4300, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46002, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Alcohol, 70% Isopropyl, gal", quantity: 16, uom: "gals", procurementMode: "Shopping", estimatedBudget: 4480.00, schedule: { jan: 0, feb: 2240, mar: 0, apr: 0, may: 0, jun: 0, jul: 2240, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46003, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Ballpen, Retractable, 0.5 Smooth Ink, 12s/box", quantity: 30, uom: "boxes", procurementMode: "Shopping", estimatedBudget: 4320.00, schedule: { jan: 0, feb: 2160, mar: 0, apr: 0, may: 0, jun: 0, jul: 2160, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46004, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Ballpen, G-Tec C3 assorted (black, red & blue)", quantity: 14, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 1400.00, schedule: { jan: 0, feb: 700, mar: 0, apr: 0, may: 0, jun: 0, jul: 700, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46005, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Refill for Roller Ballpen G-Tec-C3 (black, red & blue)", quantity: 20, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 1100.00, schedule: { jan: 0, feb: 550, mar: 0, apr: 0, may: 0, jun: 0, jul: 550, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46006, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Calculator, Desktop, 12-digit solar-powered", quantity: 5, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 2268.50, schedule: { jan: 0, feb: 2268.50, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46007, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Carbon Paper, long, 50s", quantity: 1, uom: "box", procurementMode: "Shopping", estimatedBudget: 306.00, schedule: { jan: 0, feb: 306.00, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46008, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Columnar Book 10 column", quantity: 30, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 1800.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 1200, aug: 600, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46009, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Columnar Book - 24 column", quantity: 10, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 600.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 600, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46010, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Correction Tape (8m)", quantity: 60, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 2100.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 1050, aug: 0, sep: 0, oct: 1050, nov: 0, dec: 0 } },
+    { id: 46011, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Dater stamp, 5mm", quantity: 2, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 500.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 500, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46012, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Double-sided Tape, 1\", 24mmx10m", quantity: 10, uom: "roll", procurementMode: "Shopping", estimatedBudget: 1729.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 1729, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46013, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Duct Tape, 2\", waterproof", quantity: 5, uom: "roll", procurementMode: "Shopping", estimatedBudget: 485.00, schedule: { jan: 0, feb: 485, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46014, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Expandable Folder (Long)", quantity: 100, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 3400.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 1700, aug: 0, sep: 0, oct: 1700, nov: 0, dec: 0 } },
+    { id: 46015, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "File Folder long 14-pts. U.S.", quantity: 250, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 5500.00, schedule: { jan: 0, feb: 2200, mar: 0, apr: 0, may: 0, jun: 0, jul: 3300, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46016, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Paper-Multicopy, legal size, 80 gsm", quantity: 40, uom: "ream", procurementMode: "Shopping", estimatedBudget: 14000.00, schedule: { jan: 7000, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 7000, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46017, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Paper-Multipurpose, legal size, 70 gsm", quantity: 40, uom: "ream", procurementMode: "Shopping", estimatedBudget: 12000.00, schedule: { jan: 6000, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 6000, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46018, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Paper-Multicopy, letter size 80 gsm", quantity: 40, uom: "ream", procurementMode: "Shopping", estimatedBudget: 13200.00, schedule: { jan: 6600, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 6600, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46019, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Paper-Multicopy, A4 size, 80 gsm", quantity: 5, uom: "ream", procurementMode: "Shopping", estimatedBudget: 1700.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 1700, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46020, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Printer Ink Refill 003 Black", quantity: 10, uom: "bots", procurementMode: "Shopping", estimatedBudget: 4500.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 2250, aug: 0, sep: 0, oct: 2250, nov: 0, dec: 0 } },
+    { id: 46021, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Printer Ink Refill 003 Cyan", quantity: 8, uom: "bots", procurementMode: "Shopping", estimatedBudget: 3600.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 1800, aug: 0, sep: 0, oct: 1800, nov: 0, dec: 0 } },
+    { id: 46022, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Printer Ink Refill 003 Magenta", quantity: 8, uom: "bots", procurementMode: "Shopping", estimatedBudget: 3600.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 1800, aug: 0, sep: 0, oct: 1800, nov: 0, dec: 0 } },
+    { id: 46023, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Printer Ink Refill 003 Yellow", quantity: 8, uom: "bots", procurementMode: "Shopping", estimatedBudget: 3600.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 1800, aug: 0, sep: 0, oct: 1800, nov: 0, dec: 0 } },
+    { id: 46024, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Printer Ink Refill 664 Black", quantity: 1, uom: "bots", procurementMode: "Shopping", estimatedBudget: 450.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 450, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46025, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Stapler No. 35 w/ Staple Remover (Max)", quantity: 10, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 3450.00, schedule: { jan: 0, feb: 1725, mar: 0, apr: 0, may: 0, jun: 0, jul: 1725, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46026, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Trash Bag (large) 100s", quantity: 20, uom: "rolls", procurementMode: "Shopping", estimatedBudget: 18000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 9000, aug: 0, sep: 0, oct: 9000, nov: 0, dec: 0 } },
+    { id: 46027, office: "CEO-Administrative Division", papCode: "5-02-03-010", generalDescription: "Trash bag (small) 100s", quantity: 30, uom: "rolls", procurementMode: "Shopping", estimatedBudget: 13500.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 6750, aug: 0, sep: 0, oct: 6750, nov: 0, dec: 0 } },
+
+    // TELEPHONE EXPENSES
+    { id: 46028, office: "CEO-Administrative Division", papCode: "5-02-05-020", generalDescription: "TELEPHONE EXPENSES", projectType: "Services", quantity: 1, uom: "lot", procurementMode: "SVP", estimatedBudget: 200000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 50000, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 50000 } },
+
+    // OTHER SUPPLIES AND MATERIALS EXP.
+    { id: 46029, office: "CEO-Administrative Division", papCode: "5-02-03-990", generalDescription: "Toner Cartridge, MX 273 FT (for Sharp Copier AR-6020Nv)", quantity: 1, uom: "cartridge", procurementMode: "SVP", estimatedBudget: 12950.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 12950, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46030, office: "CEO-Administrative Division", papCode: "5-02-03-990", generalDescription: "Toner Cartridge, Black (for Sharp Multifunction Printer MX-1810U)", quantity: 2, uom: "cartridge", procurementMode: "SVP", estimatedBudget: 19900.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 9950, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 9950, nov: 0, dec: 0 } },
+    { id: 46031, office: "CEO-Administrative Division", papCode: "5-02-03-990", generalDescription: "Printer, All-in-One Ink Tank, Colored, Print, Copy, Scan", quantity: 1, uom: "unit", procurementMode: "SVP", estimatedBudget: 14000.00, schedule: { jan: 0, feb: 14000, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+
+    // WATER EXPENSES
+    { id: 46032, office: "CEO-Administrative Division", papCode: "5-02-04-010", generalDescription: "WATER EXPENSES", projectType: "Services", quantity: 3000, uom: "bots", procurementMode: "SVP", estimatedBudget: 150000.00, schedule: { jan: 0, feb: 37500, mar: 0, apr: 37500, may: 0, jun: 0, jul: 37500, aug: 0, sep: 0, oct: 37500, nov: 0, dec: 0 } },
+
+    // REPAIR & MAINT. MACHINERIES & EQUIPMENT
+    { id: 46033, office: "CEO-Administrative Division", papCode: "5-02-13-050", generalDescription: "REPAIR & MAINT. MACHINERIES & EQUIPMENT", projectType: "Services", quantity: 1, uom: "lot", procurementMode: "SVP", estimatedBudget: 80000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 40000, aug: 0, sep: 0, oct: 40000, nov: 0, dec: 0 } },
+    
+    // OTHER MAINT. & OPR. EXPENSES
+    { id: 46034, office: "CEO-Administrative Division", papCode: "5-02-99-990", generalDescription: "Detergent Powder 500g", quantity: 80, uom: "pack", procurementMode: "Shopping", estimatedBudget: 6400.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 3200, aug: 0, sep: 0, oct: 3200, nov: 0, dec: 0 } },
+    { id: 46035, office: "CEO-Administrative Division", papCode: "5-02-99-990", generalDescription: "Dishwashing Liquid, 250ml", quantity: 20, uom: "pcs", procurementMode: "Shopping", estimatedBudget: 1900.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 950, aug: 0, sep: 0, oct: 950, nov: 0, dec: 0 } },
+    { id: 46036, office: "CEO-Administrative Division", papCode: "5-02-99-990", generalDescription: "Disinfectant Spray 510ml", quantity: 10, uom: "can", procurementMode: "Shopping", estimatedBudget: 7500.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 3750, aug: 0, sep: 0, oct: 3750, nov: 0, dec: 0 } },
+    { id: 46037, office: "CEO-Administrative Division", papCode: "5-02-99-990", generalDescription: "Fabric Conditioner 1 gal", quantity: 15, uom: "gals", procurementMode: "Shopping", estimatedBudget: 5250.00, schedule: { jan: 0, feb: 2450, mar: 0, apr: 0, may: 0, jun: 0, jul: 2800, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+
+    // EXPENSES FROM PAGE 3
+    { id: 46038, office: "CEO-Administrative Division", papCode: "5-02-01-010", generalDescription: "TRAVELING EXPENSES", projectType: "Services", quantity: 1, uom: "lot", procurementMode: "SVP", estimatedBudget: 160000.00, schedule: { jan: 80000, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 80000, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46039, office: "CEO-Administrative Division", papCode: "5-02-02-010", generalDescription: "TRAINING EXPENSES", projectType: "Services", quantity: 1, uom: "lot", procurementMode: "SVP", estimatedBudget: 190000.00, schedule: { jan: 95000, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 95000, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46040, office: "CEO-Administrative Division", papCode: "5-02-03-090", generalDescription: "FUEL, OIL & LUBRICANTS EXPENSES", projectType: "Goods", quantity: 1, uom: "lot", procurementMode: "SVP", estimatedBudget: 160000.00, schedule: { jan: 80000, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 80000, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+
+    // SPECIAL PURPOSE APPROPRIATION
+    { id: 46041, office: "CEO-Administrative Division", generalDescription: "SPECIAL PURPOSE APPROPRIATION - Improvement of Day Care Centers at Various Barangays", projectType: "Infrastructure", quantity: 1, uom: "lot", procurementMode: "Competitive Bidding", estimatedBudget: 5000000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46042, office: "CEO-Administrative Division", generalDescription: "SPECIAL PURPOSE APPROPRIATION - Construction of multi-purpose pavements for Various Barangays", projectType: "Infrastructure", quantity: 1, uom: "lot", procurementMode: "Competitive Bidding", estimatedBudget: 5000000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46043, office: "CEO-Administrative Division", generalDescription: "SPECIAL PURPOSE APPROPRIATION - Construction of Footwalks at Various Barangays", projectType: "Infrastructure", quantity: 1, uom: "lot", procurementMode: "Competitive Bidding", estimatedBudget: 2000000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46044, office: "CEO-Administrative Division", generalDescription: "SPECIAL PURPOSE APPROPRIATION - Fabrication of Basketbal Goals, Boards & Rings for Various Barangays", projectType: "Goods", quantity: 1, uom: "lot", procurementMode: "Competitive Bidding", estimatedBudget: 2000000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46045, office: "CEO-Administrative Division", generalDescription: "SPECIAL PURPOSE APPROPRIATION - Improvement of Open Space at Progreso Village", projectType: "Infrastructure", quantity: 1, uom: "lot", procurementMode: "SVP", estimatedBudget: 1800000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46046, office: "CEO-Administrative Division", generalDescription: "SPECIAL PURPOSE APPROPRIATION - Partial Development of Blk 51-PVRS 2", projectType: "Infrastructure", quantity: 1, uom: "lot", procurementMode: "SVP", estimatedBudget: 1500000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46047, office: "CEO-Administrative Division", generalDescription: "SPECIAL PURPOSE APPROPRIATION - SEEU-Markets-Upgrading of Electrical Facilities", projectType: "Infrastructure", quantity: 1, uom: "lot", procurementMode: "Competitive Bidding", estimatedBudget: 5000000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+    { id: 46048, office: "CEO-Administrative Division", generalDescription: "SPECIAL PURPOSE APPROPRIATION - Improvement of Comfort Rooms and Septic Tanks at Libertad Market", projectType: "Infrastructure", quantity: 1, uom: "lot", procurementMode: "Competitive Bidding", estimatedBudget: 3000000.00, schedule: { jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0 } },
+
   ],
   footerData: {
-    preparedBy: { name: 'ENGR. LOBEN RAFAEL D. CEBALLOS', position: 'OIC - City Engineer', date: 'N/A' },
+    preparedBy: { name: 'ENGR. LOBEN RAFAEL D. CEBALLOS', position: 'OIC-City Engineer', date: 'N/A' },
     submittedBy: { name: 'MARIA IMELDA A. WILLIAMS', position: 'City Budget Officer', date: 'N/A' },
   },
 };

@@ -1,4 +1,5 @@
 
+
 import { MarketItem } from '../../../types';
 
 export const item_9010: MarketItem = { 
@@ -6,7 +7,7 @@ export const item_9010: MarketItem = {
     name: "DESKTOP COMPUTER", 
     description: "A standard office desktop computer set, including a CPU, monitor, keyboard, and mouse. Suitable for general government administrative tasks.",
     category: "Common-Use Items", 
-    uacsCode: "50215030-01",
+    uacsCode: "10705030-00",
     quantity: 150, 
     unit: "UNIT", 
     price: 25165.50, 

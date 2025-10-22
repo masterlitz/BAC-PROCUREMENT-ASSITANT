@@ -1,3 +1,4 @@
+
 import { SavedPpmp } from '../../types';
 
 export const cmo2026Ppmp: SavedPpmp = {
@@ -14,7 +15,8 @@ export const cmo2026Ppmp: SavedPpmp = {
       office: "CMO Consolidated (2026)",
       generalDescription: "MOOE (Operating Expenses)",
       projectType: "Goods / Services",
-      quantitySize: "1 lot",
+      quantity: 1,
+      uom: "lot",
       procurementMode: "Competitive Bidding / SVP",
       preProcCon: "Yes",
       procurementStart: "Jan",
@@ -30,7 +32,8 @@ export const cmo2026Ppmp: SavedPpmp = {
       office: "CMO Consolidated (2026)",
       generalDescription: "Capital Outlay (Property, Plant & Equipment)",
       projectType: "Goods / Infrastructure",
-      quantitySize: "1 lot",
+      quantity: 1,
+      uom: "lot",
       procurementMode: "Competitive Bidding",
       preProcCon: "Yes",
       procurementStart: "Jan",

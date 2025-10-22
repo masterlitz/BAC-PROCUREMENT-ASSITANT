@@ -1,12 +1,15 @@
+
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { PpmpProjectItem, PurchaseRequest } from '../../types';
 import { extractDetailedPpmpData } from '../../services/geminiService';
-import { initialSavedPpmps } from '../../data/savedPpmps';
 import DashboardView from '../consolidator/DashboardView';
 import ComplianceView from '../consolidator/ComplianceView';
 import ProjectsView from '../consolidator/ProjectsView';
 import BudgetView from '../consolidator/BudgetView';
 import SourceDocumentsView from '../consolidator/SourceDocumentsView';
+import AppView from '../consolidator/AppView';
+import AppCseView from '../consolidator/AppCseView';
+import { initialSavedPpmps } from '../../data/savedPpmps';
 
 interface PpmpConsolidatorTabProps {
     isVisible: boolean;
@@ -23,12 +26,14 @@ const PpmpConsolidatorTab: React.FC<PpmpConsolidatorTabProps> = ({ isVisible, on
     const nodeRef = useRef<HTMLDivElement>(null);
 
     // Data state
-    const [consolidatedItems, setConsolidatedItems] = useState<PpmpProjectItem[]>(() => initialSavedPpmps.flatMap(p => p.items));
+    const [consolidatedItems, setConsolidatedItems] = useState<PpmpProjectItem[]>(() => {
+        return initialSavedPpmps.flatMap(p => p.items);
+    });
     const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>([]);
     
     // UI state
     const [error, setError] = useState('');
-    const [activeView, setActiveView] = useState<'dashboard' | 'compliance' | 'projects' | 'budget' | 'source'>('dashboard');
+    const [activeView, setActiveView] = useState<'dashboard' | 'compliance' | 'projects' | 'budget' | 'source' | 'app' | 'app-cse'>('dashboard');
     const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
     const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
     const [confirmText, setConfirmText] = useState('');
@@ -36,8 +41,12 @@ const PpmpConsolidatorTab: React.FC<PpmpConsolidatorTabProps> = ({ isVisible, on
 
     // Refs for child component export functions
     const dashboardRef = useRef<{ exportToPdf: () => void }>(null);
+    const complianceRef = useRef<{ exportToPdf: () => void }>(null);
     const projectsRef = useRef<{ exportToPdf: () => void }>(null);
+    const budgetRef = useRef<{ exportToPdf: () => void }>(null);
     const sourceRef = useRef<{ exportToPdf: () => void; exportToExcel: () => void; }>(null);
+    const appRef = useRef<{ exportToPdf: () => void; exportToExcel: () => void; }>(null);
+    const appCseRef = useRef<{ exportToPdf: () => void; exportToExcel: () => void; }>(null);
 
     
     useEffect(() => {
@@ -106,26 +115,22 @@ const PpmpConsolidatorTab: React.FC<PpmpConsolidatorTabProps> = ({ isVisible, on
 
     const handleExportPdf = () => {
         switch (activeView) {
-            case 'dashboard':
-                dashboardRef.current?.exportToPdf();
-                break;
-            case 'projects':
-                projectsRef.current?.exportToPdf();
-                break;
-            case 'source':
-                sourceRef.current?.exportToPdf();
-                break;
-            default:
-                alert(`Export is not yet available for the "${activeView}" view.`);
+            case 'dashboard': dashboardRef.current?.exportToPdf(); break;
+            case 'compliance': complianceRef.current?.exportToPdf(); break;    
+            case 'projects': projectsRef.current?.exportToPdf(); break;
+            case 'budget': budgetRef.current?.exportToPdf(); break;
+            case 'source': sourceRef.current?.exportToPdf(); break;
+            case 'app': appRef.current?.exportToPdf(); break;
+            case 'app-cse': appCseRef.current?.exportToPdf(); break;
+            default: alert(`Export is not yet available for the "${activeView}" view.`);
         }
     };
      const handleExportExcel = () => {
         switch (activeView) {
-            case 'source':
-                sourceRef.current?.exportToExcel();
-                break;
-            default:
-                alert(`Excel export is not available for the "${activeView}" view.`);
+            case 'source': sourceRef.current?.exportToExcel(); break;
+            case 'app': appRef.current?.exportToExcel(); break;
+            case 'app-cse': appCseRef.current?.exportToExcel(); break;
+            default: alert(`Excel export is not available for the "${activeView}" view.`);
         }
     };
     
@@ -138,10 +143,12 @@ const PpmpConsolidatorTab: React.FC<PpmpConsolidatorTabProps> = ({ isVisible, on
         { key: 'compliance', label: 'Compliance', icon: '✅' },
         { key: 'projects', label: 'Projects', icon: '📋' },
         { key: 'budget', label: 'Utilization', icon: '💰' },
-        { key: 'source', label: 'Documents', icon: '📄' }
+        { key: 'source', label: 'Documents', icon: '📄' },
+        { key: 'app', label: 'APP (NON-CSE)', icon: '📑' },
+        { key: 'app-cse', label: 'APP-CSE', icon: '📝' }
     ];
     
-    const showExportButtons = ['dashboard', 'projects', 'source'].includes(activeView);
+    const showExportButtons = ['dashboard', 'compliance', 'projects', 'budget', 'source', 'app', 'app-cse'].includes(activeView);
 
     const mainContent = () => {
         if (loading) {
@@ -166,10 +173,12 @@ const PpmpConsolidatorTab: React.FC<PpmpConsolidatorTabProps> = ({ isVisible, on
 
         switch(activeView) {
             case 'dashboard': return <DashboardView ref={dashboardRef} consolidatedItems={consolidatedItems} />;
-            case 'compliance': return <ComplianceView consolidatedItems={consolidatedItems} />;
+            case 'compliance': return <ComplianceView ref={complianceRef} consolidatedItems={consolidatedItems} />;
             case 'projects': return <ProjectsView ref={projectsRef} items={consolidatedItems} onDelete={(id) => confirmActionWrapper(() => handleDeleteProject(id), `Are you sure you want to delete project ID ${id}? This will also remove any associated purchase requests.`)} />;
-            case 'budget': return <BudgetView consolidatedItems={consolidatedItems} purchaseRequests={purchaseRequests} onAddRequest={setPurchaseRequests} />;
+            case 'budget': return <BudgetView ref={budgetRef} consolidatedItems={consolidatedItems} purchaseRequests={purchaseRequests} onAddRequest={setPurchaseRequests} />;
             case 'source': return <SourceDocumentsView ref={sourceRef} consolidatedItems={consolidatedItems} purchaseRequests={purchaseRequests} />;
+            case 'app': return <AppView ref={appRef} consolidatedItems={consolidatedItems} />;
+            case 'app-cse': return <AppCseView ref={appCseRef} consolidatedItems={consolidatedItems} />;
             default: return null;
         }
     };
@@ -206,7 +215,7 @@ const PpmpConsolidatorTab: React.FC<PpmpConsolidatorTabProps> = ({ isVisible, on
                                         </svg>
                                         Export PDF
                                     </button>
-                                     <button onClick={handleExportExcel} className="btn w-full text-sm bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-md flex items-center justify-center gap-2">
+                                     <button onClick={handleExportExcel} disabled={activeView !== 'source' && activeView !== 'app' && activeView !== 'app-cse'} className="btn w-full text-sm bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-md flex items-center justify-center gap-2 disabled:bg-gray-400">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                         </svg>

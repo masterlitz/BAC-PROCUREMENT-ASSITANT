@@ -9,6 +9,7 @@ interface NavbarProps {
     activeTab: TabKey;
     setActiveTab: (tab: TabKey) => void;
     setActiveModal: (modal: ModalKey) => void;
+    setStartCatalogMaximized: (isMax: boolean) => void;
 }
 
 interface MenuGroup {
@@ -16,7 +17,7 @@ interface MenuGroup {
     items: MenuItem[];
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentUser, menuItems, activeTab, setActiveTab, setActiveModal }) => {
+const Navbar: React.FC<NavbarProps> = ({ currentUser, menuItems, activeTab, setActiveTab, setActiveModal, setStartCatalogMaximized }) => {
     
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -123,17 +124,25 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, menuItems, activeTab, setA
         setIsMobileMenuOpen(false);
     };
     
+    const handleItemHover = (item: MenuItem) => {
+        if (item.id === 'catalog') {
+            setStartCatalogMaximized(true);
+        }
+    };
+
     const DropdownItem: React.FC<{ 
         item: MenuItem; 
         activeTab: TabKey; 
         onClick: (item: MenuItem) => void;
+        onHover: (item: MenuItem) => void;
         style?: React.CSSProperties;
-    }> = ({ item, activeTab, onClick, style }) => {
+    }> = ({ item, activeTab, onClick, onHover, style }) => {
         const isFloatingButton = ['bac-analytics', 'catalog', 'qr-maker', 'email-composer', 'ppmp-consolidator', 'infographics'].includes(item.id);
         const isActive = activeTab === item.id && !isFloatingButton;
         return (
             <button 
                 onClick={() => onClick(item)} 
+                onMouseEnter={() => onHover(item)}
                 className={`dropdown-item ${isActive ? 'active' : ''}`} 
                 role="menuitem"
                 style={style}
@@ -167,7 +176,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, menuItems, activeTab, setA
                             {(openMenu === group.header.id || isMobile) && (
                                 <div className={isMobile ? "pl-4" : "dropdown-menu"}>
                                     {group.items.map((item, index) => (
-                                        <DropdownItem key={item.id} item={item} activeTab={activeTab} onClick={handleItemClick} style={{ animationDelay: `${index * 0.03}s` }}/>
+                                        <DropdownItem key={item.id} item={item} activeTab={activeTab} onClick={handleItemClick} onHover={handleItemHover} style={{ animationDelay: `${index * 0.03}s` }}/>
                                     ))}
                                 </div>
                             )}
@@ -188,7 +197,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, menuItems, activeTab, setA
                         {(openMenu === accountGroup.header.id || isMobile) && (
                             <div className={isMobile ? "pl-4" : "dropdown-menu dropdown-menu-right"}>
                                 {accountGroup.items.map((item, index) => (
-                                    <DropdownItem key={item.id} item={item} activeTab={activeTab} onClick={handleItemClick} style={{ animationDelay: `${index * 0.03}s` }} />
+                                    <DropdownItem key={item.id} item={item} activeTab={activeTab} onClick={handleItemClick} onHover={() => {}} style={{ animationDelay: `${index * 0.03}s` }} />
                                 ))}
                             </div>
                         )}

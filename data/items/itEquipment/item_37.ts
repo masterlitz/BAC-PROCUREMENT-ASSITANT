@@ -2,7 +2,7 @@ import { MarketItem } from '../../../types';
 
 export const item_37: MarketItem = { 
     id: 37, 
-    name: "673 INK", 
+    name: "Ink Bottle Set (6 Colors)", 
     description: "A complete set of six genuine Epson 673 series ink bottles, designed for L800 series photo printers to produce vibrant, long-lasting prints.", 
     category: "IT Equipment and Peripherals", 
     uacsCode: "50203090-00", 

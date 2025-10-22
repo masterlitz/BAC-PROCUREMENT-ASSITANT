@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_111: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_111: MarketItem = {
     name: "AVR", 
     description: "A standard Automatic Voltage Regulator (AVR) for protecting electronic devices from voltage fluctuations.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705030-00", 
     quantity: 300, 
     unit: "UNIT", 
     price: 399.60, 

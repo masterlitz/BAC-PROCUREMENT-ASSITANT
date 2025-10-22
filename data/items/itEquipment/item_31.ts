@@ -1,11 +1,12 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_31: MarketItem = { 
     id: 31, 
-    name: "3in1 Epson Printer", 
+    name: "3-in-1 Ink Tank Printer", 
     description: "An Epson EcoTank multi-function printer with an integrated ink tank system for high-volume, low-cost printing, scanning, and copying.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705020-00", 
     quantity: 75, 
     unit: "PCS", 
     price: 12741.75, 

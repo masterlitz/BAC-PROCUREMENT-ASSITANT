@@ -1,9 +1,10 @@
-import { MarketItem } from '../../../types';
 
-export const prItems: MarketItem[] = [
+import { MarketItem, VariantMarketItem } from '../../../types';
+
+export const prItems: (MarketItem | VariantMarketItem)[] = [
     { id: 10054, name: "Semi-Gloss Paint (White)", description: "White semi-gloss paint for interior/exterior use.", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "gals", price: 644.00, referenceLinks: [] },
     { id: 10055, name: "Enamel Gloss Paint (Black)", description: "Black enamel gloss paint for durable finish.", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "gals", price: 582.00, referenceLinks: [] },
-    { id: 10056, name: "Davies Elastomeric Water Proofing Paint", description: "Elastomeric waterproofing paint.", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "gals", price: 811.00, referenceLinks: [] },
+    { id: 10056, name: "Elastomeric Water Proofing Paint", description: "Elastomeric waterproofing paint.", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "gals", price: 811.00, referenceLinks: [] },
     { id: 10057, name: "Paint Brush 4\"", description: "4-inch paint brush.", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "pcs", price: 110.00, referenceLinks: [] },
     { id: 10058, name: "Paint Brush 3\"", description: "3-inch paint brush.", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "pcs", price: 86.00, referenceLinks: [] },
     { id: 10059, name: "Paint Brush 2\"", description: "2-inch paint brush.", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "pcs", price: 65.00, referenceLinks: [] },
@@ -45,5 +46,32 @@ export const prItems: MarketItem[] = [
     { id: 10101, name: "2 Gang Switch", description: "2 Gang Switch", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "sets", price: 199.69, referenceLinks: [], imageUrl: "https://ph-test-11.slatic.net/shop/3a1a01e1f403ad7ec486d4a87c850301.jpeg" },
     { id: 10102, name: "3 Gang Switch", description: "3 Gang Switch", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "Sets", price: 234.90, referenceLinks: [], imageUrl: "https://down-ph.img.susercontent.com/file/ph-11134207-7qul0-lis875rprzh8f4.webp" },
     { id: 10103, name: "3- Gang 3 way Switch", description: "3- Gang 3 way Switch", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "sets", price: 338.40, referenceLinks: [], imageUrl: "https://down-ph.img.susercontent.com/file/ph-11134207-7rasm-m9qgu343uq3180.webp" },
-    { id: 10104, name: "30AMPS 2 POLE KOTEN", description: "30AMPS 2 POLE KOTEN", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "PC", price: 999.00, referenceLinks: [], imageUrl: "https://down-ph.img.susercontent.com/file/ph-11134207-7rasa-m3vmgpzqrmka80" }
+    { id: 10104, name: "30AMPS 2 POLE KOTEN", description: "30AMPS 2 POLE KOTEN", category: "Construction and Electrical Supplies", uacsCode: "50299020-00", quantity: 100, unit: "PC", price: 999.00, referenceLinks: [], imageUrl: "https://down-ph.img.susercontent.com/file/ph-11134207-7rasa-m3vmgpzqrmka80" },
+    {
+        id: 98016,
+        isVariant: true,
+        name: "Reflectorized Sticker",
+        baseDescription: "High-intensity grade reflectorized sticker sheet for traffic signs and road markings. Weatherproof, UV and water-resistant.",
+        category: "Construction and Electrical Supplies",
+        uacsCode: "50299020-00",
+        imageUrl: "https://i.ibb.co/L51H698/reflectorized-sticker.png",
+        variants: [
+            { itemCode: "CON-STK-RFL-WHT", description: "White, 4ft x 3ft", price: 205.00, unit: "sq ft", stockStatus: "Available" },
+            { itemCode: "CON-STK-RFL-YLW", description: "Yellow, 4ft x 3ft", price: 205.00, unit: "sq ft", stockStatus: "Available" },
+        ]
+    },
+    {
+        id: 98017,
+        name: "Bright Reflective Tape 10m",
+        description: "A 10-meter roll of bright reflective tape for enhancing visibility on vehicles, barriers, and safety equipment.",
+        category: "Construction and Electrical Supplies",
+        uacsCode: "50299020-00",
+        quantity: 30,
+        unit: "roll",
+        price: 295.00,
+        referenceLinks: [],
+        itemCode: "CON-TAPE-RFL-10M",
+        technicalSpecifications: "Length: 10 meters\nType: High-intensity reflective tape\nAdhesive: Permanent, weather-resistant",
+        imageUrl: "https://i.ibb.co/zXn2H1D/reflective-tape.png"
+    }
 ];

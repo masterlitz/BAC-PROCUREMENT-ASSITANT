@@ -1,8 +1,71 @@
 
+
 import React from 'react';
 import { MenuItem, LogicTree, DocumentChecklists, TimelineConfig, ChangelogEntry } from './types';
 
 export const CHANGELOG_DATA: ChangelogEntry[] = [
+  {
+    version: '3.10',
+    date: 'October 14, 2025',
+    changes: [
+      'Data Integrity: Fixed multiple critical bugs caused by duplicate item IDs in the procurement catalog, which led to incorrect items being added to purchase requests.',
+      'Enhancement: Improved and standardized several item codes to be unique and more descriptive, enhancing data consistency and search functionality across the catalog.',
+    ],
+  },
+  {
+    version: '3.9',
+    date: 'July 24, 2025',
+    changes: [
+      'New Feature: Automated APP-CSE Generator - The PPMP Consolidator now includes a new "APP-CSE" view. This powerful tool automatically scans all uploaded PPMPs, identifies Common-Use Supplies and Equipment based on the official PS-DBM catalog, and generates a consolidated APP-CSE ready for export to PDF or Excel.',
+    ],
+  },
+  {
+    version: '3.8',
+    date: 'July 23, 2025',
+    changes: [
+      'Enhancement: In-Place Editing for PPMP Consolidator - The "Documents" view in the PPMP Consolidator now features a fully editable interface. Users can now click on any field in the PPMP form to make corrections or add details directly before exporting, ensuring the final PDF is accurate and compliant.',
+    ],
+  },
+  {
+    version: '3.7',
+    date: 'July 22, 2025',
+    changes: [
+      'New Feature: GPPB-Compliant PPMP Export - The PPMP Consolidator now exports department PPMPs in the official GPPB template format, ensuring compliance and standardization. This can be found in the "Documents" view within the consolidator.',
+    ],
+  },
+  {
+    version: '3.6',
+    date: 'July 21, 2025',
+    changes: [
+      'New Feature: PDF Export in Market Scoping - The AI Market Scoping Desk now includes an "Export PDF" feature, allowing users to generate a professional report of their research findings.',
+    ],
+  },
+  {
+    version: '3.5',
+    date: 'July 20, 2025',
+    changes: [
+      'New Feature: Directory Tab - Added a comprehensive, searchable directory of all city government offices under "Guides & Checklists" for easy access to contact information.',
+      'Enhancement: Interactive Infographics - The infographics calendar is now interactive! Hover over a scheduled date to see a tooltip with project titles. Added multi-month navigation to view upcoming activities.',
+      'Enhancement: Procurement Catalog Search - The catalog now features a global "All Categories" search option, making it easier to find any item across the entire database.',
+      'Enhancement: Dashboard Utilities - Added "Print" and "Export as Image" buttons to the Procurement Schedule on the dashboard for better reporting and sharing.',
+      'Data Update: Catalog Expansion - Added a new "Office Equipment" category with items like digital photocopiers. Also added new office supplies based on recent requests.',
+      'Compliance Update: Generic Naming - Updated several catalog items to use generic, non-brand-specific names and codes to align with procurement law standards.',
+      'UX Improvement: Market Scoping Links - Items in the catalog with a market scoping reference now have a clickable "Market Scoping" button for direct access to the source document.',
+      'Layout Improvement: Enhanced the PDF export design in the AI Market Scoping Desk to match the professional format of the Procurement Catalog reports, including page headers and footers.',
+    ],
+  },
+  {
+    version: '3.4',
+    date: 'July 18, 2025',
+    changes: [
+      'New Feature: AI Contract Auditor - A new tool under "AI & Automation" to scan draft contracts for risky clauses, ambiguities, and compliance with R.A. 12009.',
+      'New Feature: Supplier Performance Module (Beta) - Introduced a new module to track and rate supplier performance on timeliness, quality, and compliance.',
+      'Enhancement: Upgraded Market Scoping - The tool now uses advanced AI search grounding to provide more accurate, real-time pricing and directly cites sources for a better audit trail.',
+      'Enhancement: The Document Generator now includes templates for "Notice to Proceed" and "Contract Agreements".',
+      'UI Fix: Resolved a layout issue on the Dashboard for ultra-wide screen resolutions.',
+      'Data Update: UACS codes in the Procurement Catalog have been updated to align with the latest COA circular.',
+    ],
+  },
   {
     version: '3.3',
     date: 'July 17, 2025',
@@ -149,8 +212,27 @@ export const MENU_ITEMS: MenuItem[] = [
         icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>,
         description: "Access official GPPB forms and bidding document templates."
     },
+    {
+        id: 'directory',
+        label: 'Directory',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 1.5v21m-8.25-6.75h16.5" /><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v.01M3.75 6v.01M3.75 9v.01M3.75 12v.01M3.75 15v.01M3.75 18v.01M7.5 3v.01M7.5 6v.01M7.5 9v.01M7.5 12v.01M7.5 15v.01M7.5 18v.01M11.25 3v.01M11.25 6v.01M11.25 9v.01M11.25 12v.01M11.25 15v.01M11.25 18v.01M15 3v.01M15 6v.01M15 9v.01M15 12v.01M15 15v.01M15 18v.01M18.75 3v.01M18.75 6v.01M18.75 9v.01M18.75 12v.01M18.75 15v.01M18.75 18v.01M22.5 3v.01M22.5 6v.01M22.5 9v.01M22.5 12v.01M22.5 15v.01M22.5 18v.01" /></svg>,
+        description: "Find contact information for Bacolod City government offices."
+    },
+    {
+        id: 'catalog-tutorial',
+        label: 'Catalog Tutorial',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+        description: "Learn how to use the Procurement Catalog and request new items."
+    },
 
     { isHeader: true, id: 'header-ai-automation', label: 'AI & Automation' },
+    {
+        id: 'supplier-performance',
+        label: 'Supplier Performance',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" /></svg>,
+        description: "Track and rate supplier performance on timeliness, quality, and compliance.",
+        adminOnly: true,
+    },
     {
         id: 'comparator',
         label: 'Compliance Check',
@@ -170,9 +252,15 @@ export const MENU_ITEMS: MenuItem[] = [
         description: "Check documents for typos, grammatical errors, and numerical accuracy."
     },
     {
+        id: 'contract-auditor',
+        label: 'Contract Auditor',
+        icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.5h1.832c.414 0 .79-.143 1.087-.393l.001-.001c.338-.266.616-.589.828-.944l.468-1.036c.14-.309.14-.657 0-.966l-.468-1.036a1.875 1.875 0 00-.828-.944l.001-.001c-.297-.25-.673-.393-1.087-.393h-1.832c-.414 0-.79.143-1.087.393l-.001.001c-.338.266-.616.589-.828.944l-.468 1.036c-.14.309-.14.657 0 .966l.468 1.036c.212.355.49.678.828.944l-.001.001c.297.25.673-.393 1.087.393z" /></svg>,
+        description: "Scan draft contracts for risky clauses, ambiguities, and compliance with R.A. 12009."
+    },
+    {
         id: 'specification-generator',
         label: 'Specification Generator',
-        icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.528L16.5 21.75l-.398-1.222a2.997 2.997 0 00-2.122-2.122L12.75 18l1.222-.398a2.997 2.997 0 002.122-2.122L16.5 14.25l.398 1.222a2.997 2.997 0 002.122 2.122L20.25 18l-1.222.398a2.997 2.997 0 00-2.122 2.122z" /></svg>,
+        icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" /></svg>,
         description: "Generate consistent, structured prompts for AI to create detailed item specifications."
     },
     {

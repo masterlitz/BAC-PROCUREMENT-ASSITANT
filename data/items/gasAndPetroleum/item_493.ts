@@ -8,7 +8,7 @@ export const item_493: MarketItem = {
     uacsCode: "50203100-00", 
     quantity: 50000, 
     unit: "LITERS", 
-    price: 64.00, 
+    price: 66.00, 
     referenceLinks: [],
     itemCode: "10101502-FL-D01",
     technicalSpecifications: "Type: Automotive Diesel Oil\nStandard: Euro 4 compliant\nDelivery: For withdrawal via coupon/card system or direct delivery",

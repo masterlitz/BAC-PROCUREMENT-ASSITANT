@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_104: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_104: MarketItem = {
     name: "ATX 750 watts Power Supply Unit", 
     description: "A 750-watt ATX power supply unit (PSU) for desktop computers, providing stable power for high-performance components.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "50213050-00", 
     quantity: 45, 
     unit: "PC", 
     price: 6403.05, 

@@ -2,7 +2,7 @@ import { MarketItem } from '../../../types';
 
 export const item_257: MarketItem = { 
     id: 257, 
-    name: "Cartridge FX 2175 21\"", 
+    name: "Dot Matrix Ribbon Cartridge (Wide Carriage)", 
     description: "A ribbon cartridge for Epson FX-2175 dot matrix printers, ensuring reliable and clear printing for multipart forms and reports.", 
     category: "IT Equipment and Peripherals", 
     uacsCode: "50203090-00", 

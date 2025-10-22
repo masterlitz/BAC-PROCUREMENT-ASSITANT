@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_25: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_25: MarketItem = {
     name: "3-IN-1 PRINTER", 
     description: "A multi-function inkjet printer that combines printing, scanning, and copying capabilities in a single compact device. Ideal for small office use.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705020-00", 
     quantity: 85, 
     unit: "UNIT", 
     price: 21333.60, 

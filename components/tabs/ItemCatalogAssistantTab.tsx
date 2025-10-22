@@ -144,7 +144,21 @@ const ItemCatalogAssistantTab: React.FC = () => {
             theme: 'striped',
             headStyles: { fillColor: [249, 115, 22], font: 'helvetica', fontStyle: 'bold' },
             styles: { fontSize: 7, cellPadding: 4, overflow: 'linebreak', font: 'helvetica' },
-            columnStyles: { 0: { cellWidth: 100 }, 1: { cellWidth: 180 }, 3: { cellWidth: 150 }, 7: { cellWidth: 180 } }
+            columnStyles: { 0: { cellWidth: 100 }, 1: { cellWidth: 180 }, 3: { cellWidth: 150 }, 7: { cellWidth: 180 } },
+            didDrawCell: (data) => {
+                if (data.column && data.column.index === 6 && data.cell.section === 'body') {
+                    const status = data.cell.raw as CatalogAssistantItem['status'];
+                    let textColor: [number, number, number] | undefined;
+                    if (status === 'HIGH_VARIANCE') textColor = [199, 50, 50]; // Red
+                    else if (status === 'MATCH') textColor = [22, 101, 52]; // Green
+                    else if (status === 'NOT_FOUND') textColor = [180, 120, 0]; // Yellow-ish
+                    
+                    if (textColor) {
+                        (doc as any).setTextColor(textColor[0], textColor[1], textColor[2]);
+                        (doc as any).setFont('helvetica', 'bold');
+                    }
+                }
+            }
         });
 
         doc.save(`Item_Catalog_Assistant_Report_${file?.name.split('.')[0]}.pdf`);

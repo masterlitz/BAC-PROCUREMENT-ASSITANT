@@ -1,6 +1,21 @@
+
 import React, { useState } from 'react';
 import { scopeMarket, getAiAssistantResponse, extractItemsFromPdf } from '../../services/geminiService';
 import { ScopingResult, SupplierQuote } from '../../types';
+import { bacolodCityLogo } from '../../data/logo';
+
+declare global {
+    interface Window {
+        jspdf: { 
+            jsPDF: new (options?: any) => any;
+            plugin: any;
+        };
+    }
+}
+
+interface jsPDFWithAutoTable extends InstanceType<typeof window.jspdf.jsPDF> {
+  autoTable: (options: any) => jsPDFWithAutoTable;
+}
 
 type ChatMessage = { sender: 'user' | 'ai'; text: string; };
 type InputMode = 'list' | 'pdf';
@@ -40,6 +55,81 @@ const MarketScopingTab: React.FC = () => {
     const [chatMessage, setChatMessage] = useState('');
     const [chatLoading, setChatLoading] = useState(false);
     
+    const handleExportPdf = () => {
+        const successfulItems = results.filter(r => r.status === 'success');
+        if (successfulItems.length === 0) {
+            setError('No successful results to export.');
+            return;
+        }
+
+        const jspdfModule = window.jspdf;
+        if (!jspdfModule || typeof jspdfModule.jsPDF !== 'function') {
+            setError("PDF generation library (jsPDF) is unavailable.");
+            return;
+        }
+
+        const { jsPDF } = jspdfModule;
+        const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'legal' }) as jsPDFWithAutoTable;
+
+        if (typeof doc.autoTable !== 'function') {
+            setError("PDF plugin (autoTable) is unavailable.");
+            return;
+        }
+        
+        const pageContent = (data: any) => {
+            // HEADER
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text('AI Market Scoping Report', doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
+            try {
+                doc.addImage(bacolodCityLogo, 'PNG', 40, 25, 40, 40);
+            } catch(e) { console.error("Could not add logo to PDF:", e); }
+
+
+            doc.setFontSize(9);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Generated on: ${new Date().toLocaleDateString()}`, doc.internal.pageSize.getWidth() - 40, 40, { align: 'right' });
+            doc.text(`Bacolod City - Bids and Awards Committee`, doc.internal.pageSize.getWidth() - 40, 52, { align: 'right' });
+
+            // FOOTER
+            const pageCount = (doc as any).internal.getNumberOfPages();
+            doc.setFontSize(8);
+            doc.text(`Page ${data.pageNumber} of ${pageCount}`, data.settings.margin.left, doc.internal.pageSize.getHeight() - 20);
+        };
+
+        const head = [['Item Description', 'Avg. Canvassed Price', 'Price Variance', 'Suggested Catalog Price', 'AI Generated Description', 'AI Suggested Category', 'AI Suggested UACS']];
+        const body = successfulItems.map(item => [
+            item.name,
+            item.averagePrice ? `PHP ${item.averagePrice.toFixed(2)}` : 'N/A',
+            item.priceConsistency || 'N/A',
+            item.catalogPrice ? `PHP ${item.catalogPrice.toFixed(2)}` : 'N/A',
+            item.description,
+            item.category,
+            item.uacsCode
+        ]);
+
+        doc.autoTable({
+            startY: 80,
+            head: head,
+            body: body,
+            theme: 'striped',
+            headStyles: { fillColor: '#f97316', fontStyle: 'bold' },
+            styles: { fontSize: 8, cellPadding: 4, overflow: 'linebreak' },
+            columnStyles: {
+                0: { cellWidth: 120 }, // Item Description
+                1: { cellWidth: 70, halign: 'right' }, // Avg Price
+                2: { cellWidth: 60, halign: 'center' }, // Consistency
+                3: { cellWidth: 80, halign: 'right' }, // Catalog Price
+                4: { cellWidth: 'auto' }, // Description
+                5: { cellWidth: 100 }, // Category
+                6: { cellWidth: 70 }, // UACS
+            },
+            didDrawPage: pageContent,
+        });
+
+        doc.save('market_scoping_report.pdf');
+    };
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) setUploadedFile(file);
@@ -167,7 +257,10 @@ const MarketScopingTab: React.FC = () => {
             <div className="bg-gray-50 p-6 rounded-2xl shadow-inner">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold text-gray-700">Scoping Results ({results.filter(r => r.status === 'success').length}/{results.length})</h3>
-                    {results.some(r => r.status === 'failed') && <button onClick={handleRetryAll} className="btn text-sm bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">Retry All Failed</button>}
+                    <div className="flex gap-2">
+                        {results.some(r => r.status === 'failed') && <button onClick={handleRetryAll} className="btn text-sm bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg">Retry All Failed</button>}
+                        <button onClick={handleExportPdf} disabled={results.filter(r => r.status === 'success').length === 0} className="btn text-sm bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-gray-400">Export PDF</button>
+                    </div>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="min-w-full bg-white border-collapse">

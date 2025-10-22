@@ -1,3 +1,9 @@
+
+
+
+
+
+
 import React, { useState, useRef, useMemo } from 'react';
 import { compareDocuments, comparePrToCatalog, auditForBrandSpecifications } from '../../services/geminiService';
 import { ComparisonResult, ComparisonFinding, CatalogComparisonFinding, CatalogComparisonResult, BrandAuditResult, BrandAuditFinding } from '../../types';
@@ -35,7 +41,8 @@ const FileInput: React.FC<{ id: string; label: string; selectedFiles: File[]; on
     const fileInputRef = useRef<HTMLInputElement>(null);
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newFiles = event.target.files ? Array.from(event.target.files) : [];
-        if (newFiles.length > 0) { const updatedFiles = [...selectedFiles]; newFiles.forEach(newFile => { if (!updatedFiles.some(f => f.name === newFile.name && f.size === newFile.size && f.lastModified === newFile.lastModified)) { updatedFiles.push(newFile); } }); onFilesChange(updatedFiles); }
+        // FIX: Explicitly type 'newFile' as File to prevent potential type inference issues.
+        if (newFiles.length > 0) { const updatedFiles = [...selectedFiles]; newFiles.forEach((newFile: File) => { if (!updatedFiles.some(f => f.name === newFile.name && f.size === newFile.size && f.lastModified === newFile.lastModified)) { updatedFiles.push(newFile); } }); onFilesChange(updatedFiles); }
         if (fileInputRef.current) { fileInputRef.current.value = ""; }
     };
     const handleRemoveFile = (fileToRemove: File) => { onFilesChange(selectedFiles.filter(f => f !== fileToRemove)); };
@@ -121,7 +128,7 @@ const ValueWithHighlight: React.FC<{
 };
 
 
-const AIDocumentComparatorTab: React.FC = () => {
+export const AIDocumentComparatorTab: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'ppmp' | 'catalog' | 'brand_audit'>('ppmp');
 
     // State for PPMP vs PR
@@ -147,8 +154,9 @@ const AIDocumentComparatorTab: React.FC = () => {
     const printableBrandAuditRef = useRef<HTMLDivElement>(null);
     
     const groupedBrandAuditFindings = useMemo(() => {
-        if (!brandAuditResult?.findings) return {};
-        const groups = brandAuditResult.findings.reduce((acc, finding) => {
+        // Fix: Added null/undefined check for brandAuditResult.findings to prevent runtime errors when it's null.
+        if (!brandAuditResult?.findings) return {} as Record<string, BrandAuditFinding[]>;
+        const groups = (brandAuditResult.findings || []).reduce((acc: Record<string, BrandAuditFinding[]>, finding: BrandAuditFinding) => {
             const key = finding.identifiedBrand === 'None' ? 'Compliant Items' : `Brand: ${finding.identifiedBrand}`;
             if (!acc[key]) {
                 acc[key] = [];
@@ -319,7 +327,7 @@ const AIDocumentComparatorTab: React.FC = () => {
                 },
                 margin: { left: margin, right: margin }
             });
-            startY = doc.autoTable.previous!.finalY + 20;
+            startY = (doc as any).lastAutoTable.finalY + 20;
 
             const checkPageBreak = (neededSpace: number) => {
                 if (startY + neededSpace > doc.internal.pageSize.getHeight() - margin) {
@@ -362,7 +370,7 @@ const AIDocumentComparatorTab: React.FC = () => {
                         3: { cellWidth: 'auto' },
                     },
                 });
-                startY = doc.autoTable.previous!.finalY + 20;
+                startY = (doc as any).lastAutoTable.finalY + 20;
             };
 
             createTable(`Discrepancies Found (${discrepancies.length})`, discrepancies, [248, 215, 218], [114, 28, 36]);
@@ -459,7 +467,7 @@ const AIDocumentComparatorTab: React.FC = () => {
                     5: { halign: 'center', cellWidth: 60 },
                 },
                 didDrawCell: (data: any) => {
-                    if (data.column.index === 5 && data.cell.section === 'body') {
+                    if (data.column && data.column.index === 5 && data.cell.section === 'body') {
                         const status = data.cell.raw;
                         let textColor: [number, number, number] | undefined;
                         if (status === 'Overpriced') textColor = [199, 50, 50]; // Red
@@ -490,7 +498,7 @@ const AIDocumentComparatorTab: React.FC = () => {
         if (!result) return;
         const safePrNumber = result.prNumber ? result.prNumber.replace(/[^a-zA-Z0-9-]/g, '_') : 'N/A';
         const subject = `Compliance Check Findings for PR: ${safePrNumber}`;
-        const findingsText = result.findings.map((finding, index) => {
+        const findingsText = (result.findings ?? []).map((finding: ComparisonFinding, index: number) => {
             const match = finding.category.match(/Item\s*#(\S+):\s*(.*)/i);
             const itemNumberText = match ? `Item #${match[1]}` : `Finding #${index + 1}`;
             const itemName = match ? match[2]?.trim() : finding.category;
@@ -570,15 +578,16 @@ const AIDocumentComparatorTab: React.FC = () => {
             doc.setFontSize(18); doc.setFont('helvetica', 'bold'); doc.text('Brand Specification Audit Report', pageWidth / 2, startY, { align: 'center' }); startY += 25;
             doc.setFontSize(10); doc.setFont('helvetica', 'normal'); doc.text(`Source Document: ${prFileForBrandAudit[0]?.name || 'N/A'}`, margin, startY); doc.text(`Date Generated: ${new Date().toLocaleDateString()}`, pageWidth - margin, startY, { align: 'right' }); startY += 25;
             doc.autoTable({ startY: startY, body: [[{ content: `${brandAuditResult.overallConclusion}\n\n${brandAuditResult.summary}`, styles: { fontStyle: 'normal' } }]], theme: 'plain', styles: { fillColor: brandAuditResult.overallConclusion === 'Compliant' ? [212, 237, 218] : [255, 243, 205], lineWidth: 1, lineColor: brandAuditResult.overallConclusion === 'Compliant' ? [197, 229, 209] : [255, 238, 186] }});
-            startY = doc.autoTable.previous!.finalY + 20;
+            startY = (doc as any).lastAutoTable.finalY + 20;
 
             const tableHeaders = ['Original Item Description', 'Recommended Generic Name', 'Explanation'];
-            for (const [groupName, findings] of Object.entries(groupedBrandAuditFindings)) {
+            // @FIX: Object.entries was inferring the value as 'unknown'. Added a type assertion to correctly type 'findings' as BrandAuditFinding[], resolving the '.map' error.
+            for (const [groupName, findings] of Object.entries(groupedBrandAuditFindings) as [string, BrandAuditFinding[]][]) {
                 if (startY > doc.internal.pageSize.getHeight() - 100) { doc.addPage(); startY = margin; }
                 doc.setFontSize(12); doc.setFont('helvetica', 'bold'); doc.text(groupName, margin, startY); startY += 20;
-                const body = findings.map(f => [f.itemDescription, f.recommendedGenericName, f.explanation]);
+                const body = (findings || []).map((f: BrandAuditFinding) => [f.itemDescription, f.recommendedGenericName, f.explanation]);
                 doc.autoTable({ startY: startY, head: [tableHeaders], body: body, theme: 'grid', headStyles: { fillColor: groupName === 'Compliant Items' ? [34, 139, 34] : [220, 20, 60] }, styles: { fontSize: 8, cellPadding: 4, overflow: 'linebreak' }, columnStyles: { 0: { cellWidth: 150 }, 1: { cellWidth: 120 }, 2: { cellWidth: 'auto' } }});
-                startY = doc.autoTable.previous!.finalY + 20;
+                startY = (doc as any).lastAutoTable.finalY + 20;
             }
             const safeFileName = `Brand_Audit_${prFileForBrandAudit[0]?.name.replace(/\.[^/.]+$/, '') || 'Report'}.pdf`; doc.save(safeFileName);
         } catch (e) { console.error("PDF generation failed:", e); setBrandAuditError("Sorry, there was an error creating the PDF.");
@@ -650,17 +659,15 @@ const AIDocumentComparatorTab: React.FC = () => {
                                             <th className="p-3 text-center text-sm font-semibold text-gray-600">Status</th>
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-gray-200">
+                                    <tbody className="divide-y divide-gray-200 text-sm">
                                         {catalogResult.findings.map((finding, index) => (
-                                            <tr key={index} className="hover:bg-gray-50">
-                                                <td className="p-2 text-sm text-gray-800">{finding.prItemDescription}</td>
-                                                <td className="p-2 text-sm text-gray-800 text-right font-mono">Php {finding.prUnitCost.toFixed(2)}</td>
-                                                <td className="p-2 text-sm text-gray-600">{finding.catalogItemName}</td>
-                                                <td className="p-2 text-sm text-gray-800 text-right font-mono">Php {finding.catalogUnitCost.toFixed(2)}</td>
-                                                <td className={`p-2 text-sm text-right font-semibold ${finding.variancePercentage > 15 ? 'text-red-600' : 'text-gray-700'}`}>{finding.variancePercentage.toFixed(2)}%</td>
-                                                <td className={`p-2 text-center text-xs font-bold ${getStatusCellStyle(finding.status)}`}>
-                                                    <span className="px-2 py-1 rounded-full">{finding.status}</span>
-                                                </td>
+                                            <tr key={index}>
+                                                <td className="p-2">{finding.prItemDescription}</td>
+                                                <td className="p-2 text-right font-mono">{finding.prUnitCost.toFixed(2)}</td>
+                                                <td className="p-2">{finding.catalogItemName}</td>
+                                                <td className="p-2 text-right font-mono">{finding.catalogUnitCost > 0 ? finding.catalogUnitCost.toFixed(2) : 'N/A'}</td>
+                                                <td className={`p-2 text-right font-semibold ${Math.abs(finding.variancePercentage) > 15 ? 'text-red-600' : 'text-gray-700'}`}>{finding.variancePercentage.toFixed(2)}%</td>
+                                                <td className="p-2 text-center"><span className={`px-2 py-0.5 rounded-full font-bold text-xs ${getStatusCellStyle(finding.status)}`}>{finding.status}</span></td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -673,79 +680,57 @@ const AIDocumentComparatorTab: React.FC = () => {
 
             {activeTab === 'brand_audit' && (
                 <>
-                    <p className="text-gray-600 mb-6">Upload a procurement document (e.g., Purchase Request). The AI will scan item descriptions for specific brand names, which may violate procurement laws (R.A. 9184 & R.A. 12009) that require generic specifications to ensure fair competition.</p>
+                    <p className="text-gray-600 mb-6">Upload a procurement document (e.g., Purchase Request). The AI will scan all item descriptions for specific brand names, which is a compliance risk under R.A. 9184/12009. It will suggest generic alternatives for any issues found.</p>
                     <div className="grid md:grid-cols-2 gap-6 mb-6 min-h-[250px]">
-                        <FileInput id="brand-audit-upload" label="Upload Document for Audit" selectedFiles={prFileForBrandAudit} onFilesChange={setPrFileForBrandAudit} disabled={brandAuditLoading} />
+                        <FileInput id="pr-brand-audit-upload" label="Upload Document for Brand Audit" selectedFiles={prFileForBrandAudit} onFilesChange={setPrFileForBrandAudit} disabled={brandAuditLoading} />
                         <div className="p-4 border-2 border-dashed border-transparent rounded-lg flex flex-col justify-center items-center text-gray-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c0 3.517-1.009 6.789-2.75 9.565M12 11c3.517 0 6.789-1.009 9.565-2.75M12 11v10.25M12 11V3.75M3.75 12H12m0 0h8.25" />
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 110-18 9 9 0 010 18zm0 0a9 9 0 100-18 9 9 0 000 18z" />
-                            </svg>
-                             <p className="text-center font-semibold">Ready for Audit</p>
-                             <p className="text-center text-sm">The AI will check for non-generic, brand-specific descriptions.</p>
+                             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-300 mb-2" fill="none" viewBox="0 0 24 24" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h.01" /></svg>
+                             <p className="text-center font-semibold">Ready for Brand Audit</p>
+                             <p className="text-center text-sm">The AI will check for non-generic specifications.</p>
                         </div>
                     </div>
-                    <button onClick={handleBrandAudit} className="btn bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg w-full disabled:bg-gray-400 disabled:cursor-not-allowed" disabled={brandAuditLoading || prFileForBrandAudit.length === 0}>
-                        {brandAuditLoading ? 'Auditing...' : 'Audit for Brand Specifications'}
+                     <button onClick={handleBrandAudit} className="btn bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg w-full disabled:bg-gray-400" disabled={brandAuditLoading || prFileForBrandAudit.length === 0}>
+                        {brandAuditLoading ? 'Auditing for Brands...' : 'Perform Brand Audit'}
                     </button>
-                    {brandAuditLoading && <Loader text="AI is auditing the document for brand names..." />}
+                    {brandAuditLoading && <Loader text="AI is checking for brand specifications..." />}
                     {brandAuditError && <p className="text-center text-red-500 my-4">{brandAuditError}</p>}
                     {brandAuditResult && (
-                         <div id="brand-audit-printable-result" ref={printableBrandAuditRef} className="mt-6 printable-content">
-                            <div className="hidden print:block mb-6 text-center">
-                                <img src={bacolodCityLogo} alt="Bacolod BAC Logo" className="h-16 mx-auto mb-2" />
-                                <h2 className="text-xl font-bold">Brand Specification Audit Report</h2>
-                                <p className="text-sm">Bids and Awards Committee - Bacolod City</p>
-                                <p className="text-sm">Document: {prFileForBrandAudit[0]?.name}</p>
-                            </div>
-                             <div className="flex justify-between items-center mb-4 no-print">
-                                <h3 className="text-xl font-bold text-gray-800">Audit Report</h3>
-                                <div className="flex items-center gap-2">
-                                    <button onClick={handlePrintBrandAudit} className="flex items-center space-x-2 text-sm text-gray-600 hover:text-orange-600 font-semibold p-2 rounded-lg hover:bg-orange-100 transition-colors" title="Print Report"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm7-8V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg><span>Print</span></button>
-                                    <button onClick={handleDownloadBrandAuditPdf} className="flex items-center space-x-2 text-sm text-gray-600 hover:text-orange-600 font-semibold p-2 rounded-lg hover:bg-orange-100 transition-colors" title="Download as PDF"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg><span>Download PDF</span></button>
+                         <div ref={printableBrandAuditRef} id="brand-audit-printable-result" className="mt-8 printable-content">
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-xl font-bold text-gray-800">Brand Specification Audit Report</h3>
+                                <div className="no-print flex gap-2">
+                                    <button onClick={handlePrintBrandAudit} className="btn text-sm bg-blue-600 text-white font-semibold py-1.5 px-3 rounded-md">Print</button>
+                                    <button onClick={handleDownloadBrandAuditPdf} className="btn text-sm bg-red-600 text-white font-semibold py-1.5 px-3 rounded-md">Export PDF</button>
                                 </div>
                             </div>
-                             <div className={`flex items-start p-4 rounded-lg mb-6 ${brandAuditResult.overallConclusion === 'Compliant' ? 'bg-green-100 border-green-500 text-green-800' : 'bg-yellow-100 border-yellow-500 text-yellow-800'} border-l-4`}>
-                                 <div className="flex-shrink-0">
-                                     {brandAuditResult.overallConclusion === 'Compliant' ? <CheckCircleIcon className="h-8 w-8 text-green-500" /> : <ExclamationCircleIcon className="h-8 w-8 text-yellow-500" />}
-                                 </div>
-                                 <div className="ml-4">
-                                     <h5 className="font-extrabold text-lg">{brandAuditResult.overallConclusion}</h5>
-                                     <p className="text-sm">{brandAuditResult.summary}</p>
-                                 </div>
-                             </div>
-                             <div className="space-y-6">
+                             <div className={`p-4 rounded-lg mb-6 border-l-4 ${brandAuditResult.overallConclusion === 'Compliant' ? 'bg-green-100 border-green-500' : 'bg-yellow-100 border-yellow-500'}`}>
+                                <h4 className="font-bold text-lg">{brandAuditResult.overallConclusion}</h4>
+                                <p className="text-sm">{brandAuditResult.summary}</p>
+                            </div>
+                            <div className="space-y-6">
                                 {Object.entries(groupedBrandAuditFindings).map(([groupName, findings]) => (
                                     <div key={groupName}>
-                                        <h4 className={`text-lg font-bold mb-3 border-b-2 pb-2 ${groupName === 'Compliant Items' ? 'text-green-700 border-green-200' : 'text-red-700 border-red-200'}`}>{groupName} ({findings.length})</h4>
+                                        <h4 className={`text-lg font-bold mb-3 pb-2 border-b-2 ${groupName === 'Compliant Items' ? 'text-green-700 border-green-200' : 'text-red-700 border-red-200'}`}>{groupName}</h4>
                                         <div className="space-y-4">
-                                            {findings.map((finding, index) => (
+                                            {(findings as BrandAuditFinding[]).map((finding, index) => (
                                                 <div key={index} className="bg-white p-4 rounded-lg shadow-sm border">
-                                                    <p className="text-sm text-gray-700 mb-2"><strong>Original Item:</strong> {finding.itemDescription}</p>
-                                                    {finding.status === 'potential_issue' ? (
-                                                        <div className="border-l-4 border-red-400 pl-4 py-2 bg-red-50 space-y-1">
-                                                            <p className="text-xs text-red-800"><strong>Recommended Generic Name:</strong> <span className="font-semibold">{finding.recommendedGenericName}</span></p>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="border-l-4 border-green-400 pl-4 py-2 bg-green-50">
-                                                            <p className="text-xs text-green-800 font-semibold">Status: Compliant</p>
+                                                    <p className="font-semibold text-gray-800">{finding.itemDescription}</p>
+                                                    <p className="text-sm text-gray-600 mt-2">{finding.explanation}</p>
+                                                    {finding.recommendedGenericName !== 'N/A' && (
+                                                        <div className="mt-2 bg-green-50 p-2 rounded text-sm">
+                                                            <strong>Recommended Generic Name:</strong> <span className="font-mono text-green-800">{finding.recommendedGenericName}</span>
                                                         </div>
                                                     )}
-                                                    <div className="mt-2 text-xs italic text-gray-600 bg-gray-100 p-2 rounded-md">
-                                                        <strong>AI Note:</strong> {finding.explanation}
-                                                    </div>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
                                 ))}
-                             </div>
-                         </div>
+                            </div>
+                        </div>
                     )}
                 </>
             )}
         </div>
     );
 };
-
-export default AIDocumentComparatorTab;

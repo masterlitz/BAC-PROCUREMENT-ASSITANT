@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export const ConsolidatorKPI: React.FC<{ title: string; value: string }> = ({ title, value }) => (
@@ -12,10 +13,13 @@ export const categorizeItem = (description: string): string => {
     if (desc.includes('it') || desc.includes('computer') || desc.includes('laptop') || desc.includes('printer') || desc.includes('ict')) return 'IT Equipment & Supplies';
     if (desc.includes('office supplies')) return 'General Office Supplies';
     if (desc.includes('vehicle') || desc.includes('motorcycle') || desc.includes('fuel')) return 'Transportation & Fuel';
-    if (desc.includes('construction') || desc.includes('repair') || desc.includes('maintenance') || desc.includes('road') || desc.includes('improvement')) return 'Infrastructure & Maintenance';
-    if (desc.includes('training') || desc.includes('seminar') || desc.includes('meals') || desc.includes('catering') || desc.includes('representation')) return 'Training & Representation';
-    if (desc.includes('medical') || desc.includes('health') || desc.includes('drugs') || desc.includes('laboratory')) return 'Medical & Health Supplies';
-    if (desc.includes('security') || desc.includes('janitorial')) return 'General & Janitorial Services';
-    if (desc.includes('capital outlay')) return 'Capital Outlay';
-    return 'Other Goods & Services';
+    if (desc.includes('medical') || desc.includes('dental') || desc.includes('laboratory') || desc.includes('drugs') || desc.includes('medicines')) return 'Medical & Health';
+    if (desc.includes('repair') || desc.includes('maintenance')) return 'Repairs & Maintenance';
+    if (desc.includes('construction') || desc.includes('electrical') || desc.includes('materials')) return 'Construction & Electrical';
+    if (desc.includes('food') || desc.includes('catering') || desc.includes('meals') || desc.includes('snacks')) return 'Food & Catering';
+    if (desc.includes('janitorial') || desc.includes('cleaning')) return 'Janitorial Supplies';
+    if (desc.includes('training') || desc.includes('seminar')) return 'Training & Seminars';
+    if (desc.includes('travel')) return 'Travel & Accommodation';
+    if (desc.includes('services')) return 'Professional & General Services';
+    return 'Other Categories';
 };

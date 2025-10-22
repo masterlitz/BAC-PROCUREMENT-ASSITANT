@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_403: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_403: MarketItem = {
     name: "COMPUTER MONITOR, 24\"", 
     description: "A 24-inch Full HD LED monitor, offering vibrant colors and sharp details. Ideal for standard office productivity and multitasking.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705030-00", 
     quantity: 100, 
     unit: "UNITS", 
     price: 10213.65, 

@@ -1,3 +1,7 @@
+
+
+
+
 import React, { useState, useRef } from 'react';
 import { extractRfqData } from '../../services/geminiService';
 import { ExtractedRfqData, RfqItem } from '../../types';
@@ -27,7 +31,8 @@ const RFQGeneratorTab: React.FC = () => {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files ? Array.from(event.target.files) : [];
         if (selectedFiles.length > 0) {
-            setFiles(prev => [...prev, ...selectedFiles.filter(f1 => !prev.some(f2 => f1.name === f2.name && f1.size === f2.size))]);
+            // FIX: Add explicit File types to callbacks to resolve type inference issues.
+            setFiles(prev => [...prev, ...selectedFiles.filter((f1: File) => !prev.some((f2: File) => f1.name === f2.name && f1.size === f2.size))]);
             setRfqData([]); // Clear previous data
             setError('');
         }
@@ -197,41 +202,39 @@ const RFQGeneratorTab: React.FC = () => {
 
     const ConsolidatedRfqCard: React.FC<{ items: ExtractedRfqData[]; theme: Theme }> = ({ items, theme }) => {
         const t = {
-            light: { mainText: 'text-gray-900', secondaryText: 'text-gray-600', accent: 'text-orange-600', border: 'border-gray-300', bg: 'bg-white', headerBg: 'bg-gray-100' },
-            dark: { mainText: 'text-gray-100', secondaryText: 'text-gray-300', accent: 'text-orange-400', border: 'border-gray-700', bg: 'bg-gray-800', headerBg: 'bg-gray-900/70' }
+            light: { mainText: 'text-gray-900', secondaryText: 'text-gray-700', accent: 'text-orange-600', border: 'border-gray-200', bg: 'bg-white/50', headerBg: 'bg-gray-100' },
+            dark: { mainText: 'text-gray-100', secondaryText: 'text-gray-300', accent: 'text-orange-400', border: 'border-gray-700', bg: 'bg-black/20', headerBg: 'bg-gray-700/50' }
         }[theme];
-
+    
         return (
-            <div className="w-full h-full flex flex-col p-8">
+            <div className="w-full h-full flex flex-col">
                 <h3 className={`text-4xl font-extrabold text-center mb-6 ${t.mainText}`}>Consolidated Request for Quotations</h3>
-                <div className={`flex-grow rounded-lg border ${t.border} overflow-hidden flex flex-col ${t.bg}`}>
-                    <div className="overflow-y-auto h-full">
-                        <table className="w-full text-left table-fixed border-collapse">
-                            <thead className={`sticky top-0 ${t.headerBg}`} style={{ backdropFilter: 'blur(5px)'}}>
-                                <tr>
-                                    <th className={`w-[20%] p-2 text-sm font-bold tracking-wider ${t.secondaryText} border ${t.border}`}>Purchase Request No.</th>
-                                    <th className={`w-[40%] p-2 text-sm font-bold tracking-wider ${t.secondaryText} border ${t.border}`}>Project</th>
-                                    <th className={`w-[20%] p-2 text-sm font-bold tracking-wider ${t.secondaryText} border ${t.border}`}>End User</th>
-                                    <th className={`w-[20%] p-2 text-sm font-bold tracking-wider ${t.secondaryText} border ${t.border}`}>Approved Budget (ABC)</th>
+                <div className={`rounded-lg border ${t.border} ${t.bg}`}>
+                    <table className="w-full text-left table-fixed">
+                        <thead className={`sticky top-0 ${t.headerBg}`}>
+                            <tr>
+                                <th className={`w-2/5 p-4 text-sm font-semibold tracking-wider ${t.mainText}`}>Project Title</th>
+                                <th className={`w-1/5 p-4 text-sm font-semibold tracking-wider ${t.mainText}`}>Reference No.</th>
+                                <th className={`w-1/5 p-4 text-sm font-semibold tracking-wider ${t.mainText}`}>Supplier</th>
+                                <th className={`w-1/5 p-4 text-sm font-semibold tracking-wider ${t.mainText}`}>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody className={`divide-y ${t.border}`}>
+                            {items.map((item, index) => (
+                                <tr key={index} className={`${t.secondaryText}`}>
+                                    <td className="p-3 text-sm font-medium align-top">{item.projectTitle}</td>
+                                    <td className="p-3 text-sm align-top">{item.prNo}</td>
+                                    <td className="p-3 text-sm align-top whitespace-pre-wrap">{item.endUser.split('\n')[0]}</td>
+                                    <td className="p-3 text-sm font-semibold align-top">{item.abc}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {items.map((item, index) => (
-                                    <tr key={index} className={`${t.mainText}`}>
-                                        <td className={`p-2 text-xs align-top border ${t.border}`}>{item.prNo}</td>
-                                        <td className={`p-2 text-xs align-top font-semibold border ${t.border}`}>{item.projectTitle}</td>
-                                        <td className={`p-2 text-xs align-top border ${t.border}`}>{item.endUser}</td>
-                                        <td className={`p-2 text-xs align-top font-bold ${t.accent} border ${t.border}`}>{item.abc}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         );
     };
-
+    
     const isConsolidatedView = view === 'consolidated' && selectedItems.size > 0;
 
     return (

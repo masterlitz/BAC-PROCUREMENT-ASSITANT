@@ -15,7 +15,7 @@ import { item_9013 } from './item_9013';
 import { item_9014 } from './item_9014';
 import { item_9015 } from './item_9015';
 import { item_9016 } from './item_9016';
-import { philgepsItems } from './philgeps_items';
+import { appCseItems } from './app_cse_items';
 
 export const commonUseItems: MarketItem[] = [
     item_9001,
@@ -34,5 +34,5 @@ export const commonUseItems: MarketItem[] = [
     item_9014,
     item_9015,
     item_9016,
-    ...philgepsItems,
+    ...appCseItems,
 ];

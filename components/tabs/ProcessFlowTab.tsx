@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { getProcessStepExplanation } from '../../services/geminiService';
 import Loader from '../Loader';
@@ -11,6 +12,7 @@ type Step = {
     docs: string[];
     icon: React.ReactNode;
     aiContextPrompt: string;
+    timeEstimate: string;
 };
 
 // Reusable component for rendering markdown-like text
@@ -34,6 +36,15 @@ const MarkdownRenderer: React.FC<{ text: string }> = ({ text }) => {
     return <div dangerouslySetInnerHTML={createMarkup(text)} />;
 };
 
+declare global {
+    interface Window {
+        jspdf: { 
+            jsPDF: new (options?: any) => any;
+            plugin: any;
+        };
+    }
+}
+
 
 const ProcessFlowTab: React.FC = () => {
     const [selectedStep, setSelectedStep] = useState<Step | null>(null);
@@ -55,31 +66,31 @@ const ProcessFlowTab: React.FC = () => {
     
     const steps: Step[] = [
         // Phase 1: Planning
-        { id: 1, phase: "Planning", lane: 1, title: "PPMP Creation", details: "Departments create their Project Procurement Management Plan, listing all needs for the next fiscal year.", docs: ["Draft PPMP"], icon: '📝', aiContextPrompt: "Explain the importance and process of creating a PPMP." },
-        { id: 2, phase: "Planning", lane: 2, title: "Consolidate into APP", details: "BAC Secretariat gathers all PPMPs and consolidates them into the Annual Procurement Plan (APP).", docs: ["PPMPs", "Indicative APP"], icon: '📂', aiContextPrompt: "Describe the role of the BAC Secretariat in consolidating PPMPs into the APP." },
-        { id: 3, phase: "Planning", lane: 4, title: "Budget & APP Approval", details: "The final APP is approved alongside the City's annual budget, authorizing the procurements.", docs: ["Final APP", "Appropriation Ordinance"], icon: '🏛️', aiContextPrompt: "Explain the relationship between the APP and the LGU's budget approval process." },
+        { id: 1, phase: "Planning", lane: 1, title: "PPMP Creation", details: "Departments create their Project Procurement Management Plan, listing all needs for the next fiscal year.", docs: ["Draft PPMP"], icon: '📝', aiContextPrompt: "Explain the importance and process of creating a PPMP.", timeEstimate: "1-4 Weeks" },
+        { id: 2, phase: "Planning", lane: 2, title: "Consolidate into APP", details: "BAC Secretariat gathers all PPMPs and consolidates them into the Annual Procurement Plan (APP).", docs: ["PPMPs", "Indicative APP"], icon: '📂', aiContextPrompt: "Describe the role of the BAC Secretariat in consolidating PPMPs into the APP.", timeEstimate: "2-3 Weeks" },
+        { id: 3, phase: "Planning", lane: 4, title: "Budget & APP Approval", details: "The final APP is approved alongside the City's annual budget, authorizing the procurements.", docs: ["Final APP", "Appropriation Ordinance"], icon: '🏛️', aiContextPrompt: "Explain the relationship between the APP and the LGU's budget approval process.", timeEstimate: "1-2 Months" },
         // Phase 2: Request
-        { id: 4, phase: "Request", lane: 1, title: "Submit Purchase Request", details: "The End User submits a formal Purchase Request (PR) for items listed in the approved APP.", docs: ["Purchase Request"], icon: '📨', aiContextPrompt: "What are the essential elements of a valid Purchase Request in government procurement?" },
-        { id: 5, phase: "Request", lane: 2, title: "Receive & Check PR", details: "BAC Secretariat receives the PR and verifies its compliance against the approved APP and budget.", docs: ["PR", "APP"], icon: '🔍', aiContextPrompt: "Detail the compliance check performed by the BAC Secretariat when a PR is received." },
+        { id: 4, phase: "Request", lane: 1, title: "Submit Purchase Request", details: "The End User submits a formal Purchase Request (PR) for items listed in the approved APP.", docs: ["Purchase Request"], icon: '📨', aiContextPrompt: "What are the essential elements of a valid Purchase Request in government procurement?", timeEstimate: "1-2 Days" },
+        { id: 5, phase: "Request", lane: 2, title: "Receive & Check PR", details: "BAC Secretariat receives the PR and verifies its compliance against the approved APP and budget.", docs: ["PR", "APP"], icon: '🔍', aiContextPrompt: "Detail the compliance check performed by the BAC Secretariat when a PR is received.", timeEstimate: "1-4 Hours" },
         // Phase 3: Execution (Branching)
-        { id: 6, phase: "Execution", lane: 2, title: "Prepare Bidding Docs", details: "For high-value items, prepare the Invitation to Bid and Philippine Bidding Documents (PBDs).", docs: ["Invitation to Bid", "PBDs"], icon: '📚', aiContextPrompt: "What are the mandatory components of the Philippine Bidding Documents (PBDs)?" },
-        { id: 7, phase: "Execution", lane: 5, title: "Submit Bids", details: "Suppliers attend a Pre-Bid Conference (if any) and submit their sealed bids on or before the deadline.", docs: ["Bid Proposal"], icon: '📥', aiContextPrompt: "Explain the process and importance of the two-envelope system for bid submission." },
-        { id: 8, phase: "Execution", lane: 3, title: "Bid Opening & Evaluation", details: "The BAC opens bids, checks for eligibility and technical compliance, and determines the Lowest Calculated Bid (LCB).", docs: ["Abstract of Bids", "TWG Report"], icon: '🧮', aiContextPrompt: "Describe the difference between bid evaluation and post-qualification." },
-        { id: 9, phase: "Execution", lane: 3, title: "Post-Qualification", details: "The technical, legal, and financial capabilities of the bidder with the LCB are thoroughly verified.", docs: ["Post-Qualification Report"], icon: '🏅', aiContextPrompt: "What happens if the bidder with the Lowest Calculated Bid fails post-qualification?" },
+        { id: 6, phase: "Execution", lane: 2, title: "Prepare Bidding Docs", details: "For high-value items, prepare the Invitation to Bid and Philippine Bidding Documents (PBDs).", docs: ["Invitation to Bid", "PBDs"], icon: '📚', aiContextPrompt: "What are the mandatory components of the Philippine Bidding Documents (PBDs)?", timeEstimate: "3-5 Days" },
+        { id: 7, phase: "Execution", lane: 5, title: "Submit Bids", details: "Suppliers attend a Pre-Bid Conference (if any) and submit their sealed bids on or before the deadline.", docs: ["Bid Proposal"], icon: '📥', aiContextPrompt: "Explain the process and importance of the two-envelope system for bid submission.", timeEstimate: "7-15 Calendar Days" },
+        { id: 8, phase: "Execution", lane: 3, title: "Bid Opening & Evaluation", details: "The BAC opens bids, checks for eligibility and technical compliance, and determines the Lowest Calculated Bid (LCB).", docs: ["Abstract of Bids", "TWG Report"], icon: '🧮', aiContextPrompt: "Describe the difference between bid evaluation and post-qualification.", timeEstimate: "1-7 Calendar Days" },
+        { id: 9, phase: "Execution", lane: 3, title: "Post-Qualification", details: "The technical, legal, and financial capabilities of the bidder with the LCB are thoroughly verified.", docs: ["Post-Qualification Report"], icon: '🏅', aiContextPrompt: "What happens if the bidder with the Lowest Calculated Bid fails post-qualification?", timeEstimate: "Up to 12 Calendar Days" },
         // --- Alternative Path ---
-        { id: 10, phase: "Execution", lane: 2, title: "Issue RFQ (Alt. Mode)", details: "For low-value items (e.g., SVP), issue a Request for Quotation to at least three suppliers.", docs: ["Request for Quotation"], icon: '📧', aiContextPrompt: "Explain the rules and thresholds for using Small Value Procurement (SVP) under R.A. 12009." },
-        { id: 11, phase: "Execution", lane: 5, title: "Submit Quotations", details: "Suppliers submit their price quotations for the requested goods or services.", docs: ["Supplier's Quotation"], icon: '💵', aiContextPrompt: "What should suppliers ensure when submitting a quotation for government projects?" },
-        { id: 12, phase: "Execution", lane: 2, title: "Abstract of Quotations", details: "BAC Secretariat prepares a summary of all received quotations to identify the lowest price.", docs: ["Abstract of Quotations"], icon: '📊', aiContextPrompt: "What is an Abstract of Quotations and what is its purpose?" },
+        { id: 10, phase: "Execution", lane: 2, title: "Issue RFQ (Alt. Mode)", details: "For low-value items (e.g., SVP), issue a Request for Quotation to at least three suppliers.", docs: ["Request for Quotation"], icon: '📧', aiContextPrompt: "Explain the rules and thresholds for using Small Value Procurement (SVP) under R.A. 12009.", timeEstimate: "1-2 Days" },
+        { id: 11, phase: "Execution", lane: 5, title: "Submit Quotations", details: "Suppliers submit their price quotations for the requested goods or services.", docs: ["Supplier's Quotation"], icon: '💵', aiContextPrompt: "What should suppliers ensure when submitting a quotation for government projects?", timeEstimate: "3-7 Days" },
+        { id: 12, phase: "Execution", lane: 2, title: "Abstract of Quotations", details: "BAC Secretariat prepares a summary of all received quotations to identify the lowest price.", docs: ["Abstract of Quotations"], icon: '📊', aiContextPrompt: "What is an Abstract of Quotations and what is its purpose?", timeEstimate: "1 Day" },
         // Phase 4: Awarding
-        { id: 13, phase: "Awarding", lane: 3, title: "BAC Resolution", details: "BAC issues a resolution recommending the award of the contract to the Lowest Calculated and Responsive Bidder/Quotation.", docs: ["BAC Resolution"], icon: '🏆', aiContextPrompt: "What is the legal significance of a BAC Resolution to Award?" },
-        { id: 14, phase: "Awarding", lane: 4, title: "Issue Notice of Award", details: "The Head of the Procuring Entity (HOPE) approves the award and issues the NOA to the winning supplier.", docs: ["Notice of Award (NOA)"], icon: '🎉', aiContextPrompt: "Explain the 'no-contact rule' and when it applies during the procurement process." },
-        { id: 15, phase: "Awarding", lane: 5, title: "Post Performance Security", details: "The winning supplier posts a performance security and signs the contract or Purchase Order (PO).", docs: ["Performance Security", "Contract/PO"], icon: '📜', aiContextPrompt: "What are the different forms of Performance Security acceptable under procurement law?" },
-        { id: 16, phase: "Awarding", lane: 4, title: "Sign PO / Contract", details: "The HOPE signs the final Purchase Order or contract, formalizing the agreement.", docs: ["Signed PO/Contract"], icon: '✍️', aiContextPrompt: "What is the difference between a Purchase Order and a formal Contract?" },
+        { id: 13, phase: "Awarding", lane: 3, title: "BAC Resolution", details: "BAC issues a resolution recommending the award of the contract to the Lowest Calculated and Responsive Bidder/Quotation.", docs: ["BAC Resolution"], icon: '🏆', aiContextPrompt: "What is the legal significance of a BAC Resolution to Award?", timeEstimate: "1-2 Days" },
+        { id: 14, phase: "Awarding", lane: 4, title: "Issue Notice of Award", details: "The Head of the Procuring Entity (HOPE) approves the award and issues the NOA to the winning supplier.", docs: ["Notice of Award (NOA)"], icon: '🎉', aiContextPrompt: "Explain the 'no-contact rule' and when it applies during the procurement process.", timeEstimate: "Up to 7 Calendar Days" },
+        { id: 15, phase: "Awarding", lane: 5, title: "Post Performance Security", details: "The winning supplier posts a performance security and signs the contract or Purchase Order (PO).", docs: ["Performance Security", "Contract/PO"], icon: '📜', aiContextPrompt: "What are the different forms of Performance Security acceptable under procurement law?", timeEstimate: "Up to 10 Calendar Days" },
+        { id: 16, phase: "Awarding", lane: 4, title: "Sign PO / Contract", details: "The HOPE signs the final Purchase Order or contract, formalizing the agreement.", docs: ["Signed PO/Contract"], icon: '✍️', aiContextPrompt: "What is the difference between a Purchase Order and a formal Contract?", timeEstimate: "1-2 Days" },
         // Phase 5: Implementation
-        { id: 17, phase: "Implementation", lane: 2, title: "Issue Notice to Proceed", details: "BAC Secretariat issues the NTP, signaling the official start of the contract.", docs: ["Notice to Proceed (NTP)"], icon: '🚀', aiContextPrompt: "When should the Notice to Proceed be issued, and what does it trigger?" },
-        { id: 18, phase: "Implementation", lane: 5, title: "Deliver Goods/Services", details: "The supplier delivers the goods or performs the services as specified in the contract.", docs: ["Delivery Receipt"], icon: '🚚', aiContextPrompt: "What are the consequences of late delivery in government contracts?" },
-        { id: 19, phase: "Implementation", lane: 1, title: "Inspect & Accept", details: "The End User's Inspection Committee inspects the delivery and formally accepts if compliant.", docs: ["Inspection & Acceptance Report"], icon: '✅', aiContextPrompt: "Who should be part of the Inspection and Acceptance Committee and what are their responsibilities?" },
-        { id: 20, phase: "Implementation", lane: 4, title: "Process Payment", details: "The accounting and treasury departments process the payment to the supplier upon completion.", docs: ["Disbursement Voucher"], icon: '💰', aiContextPrompt: "What are the typical documents required for a supplier to be paid by a government agency?" },
+        { id: 17, phase: "Implementation", lane: 2, title: "Issue Notice to Proceed", details: "BAC Secretariat issues the NTP, signaling the official start of the contract.", docs: ["Notice to Proceed (NTP)"], icon: '🚀', aiContextPrompt: "When should the Notice to Proceed be issued, and what does it trigger?", timeEstimate: "Up to 3 Calendar Days" },
+        { id: 18, phase: "Implementation", lane: 5, title: "Deliver Goods/Services", details: "The supplier delivers the goods or performs the services as specified in the contract.", docs: ["Delivery Receipt"], icon: '🚚', aiContextPrompt: "What are the consequences of late delivery in government contracts?", timeEstimate: "Varies (per contract)" },
+        { id: 19, phase: "Implementation", lane: 1, title: "Inspect & Accept", details: "The End User's Inspection Committee inspects the delivery and formally accepts if compliant.", docs: ["Inspection & Acceptance Report"], icon: '✅', aiContextPrompt: "Who should be part of the Inspection and Acceptance Committee and what are their responsibilities?", timeEstimate: "1-3 Days" },
+        { id: 20, phase: "Implementation", lane: 4, title: "Process Payment", details: "The accounting and treasury departments process the payment to the supplier upon completion.", docs: ["Disbursement Voucher"], icon: '💰', aiContextPrompt: "What are the typical documents required for a supplier to be paid by a government agency?", timeEstimate: "5-15 Working Days" },
     ];
     
     const handleAskAi = async () => {
@@ -110,6 +121,101 @@ const ProcessFlowTab: React.FC = () => {
 
     const orderedPhases = ["Planning", "Request", "Execution", "Awarding", "Implementation"];
 
+    const handleExportPdf = () => {
+        const { jsPDF } = window.jspdf;
+        if (!jsPDF) {
+            alert('PDF generation library not loaded.');
+            return;
+        }
+        const doc = new jsPDF({ orientation: 'p', unit: 'pt', format: 'letter' });
+        const margin = 40;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const contentWidth = pageWidth - margin * 2;
+        let y = margin;
+
+        const checkPageBreak = (neededHeight: number) => {
+            if (y + neededHeight > pageHeight - margin) {
+                doc.addPage();
+                y = margin;
+                doc.setFontSize(8);
+                doc.setFont('helvetica', 'italic');
+                doc.text('Procurement Lifecycle (continued)', margin, margin / 2, {});
+                y = margin;
+            }
+        };
+
+        // Main Title
+        doc.setFontSize(18);
+        doc.setFont('helvetica', 'bold');
+        doc.text('The Complete Procurement Lifecycle', pageWidth / 2, y, { align: 'center' });
+        y += 30;
+
+        // Introduction
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        let introLines = doc.splitTextToSize("An end-to-end guide to the procurement process, from planning to payment.", contentWidth);
+        doc.text(introLines, margin, y);
+        y += introLines.length * 12 + 20;
+        doc.setLineWidth(0.5);
+        doc.setDrawColor(251, 229, 203); // orange-200
+        doc.line(margin, y - 10, pageWidth - margin, y - 10);
+
+        orderedPhases.forEach((phaseName, index) => {
+            const phaseSteps = groupedSteps[phaseName] || [];
+            const phaseNumber = index + 1;
+
+            checkPageBreak(40);
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(234, 88, 12); // orange-600
+            doc.text(`Phase ${phaseNumber}: ${phaseName}`, margin, y);
+            y += 25;
+            doc.setTextColor(40, 40, 40); // black
+
+            const renderSteps = (stepsToRender: Step[], indent = 0) => {
+                stepsToRender.forEach(step => {
+                    const stepText = `Title: ${step.title}\nResponsible: ${lanes.find(l => l.id === step.lane)?.title || 'N/A'}\nEst. Time: ${step.timeEstimate}\nDetails: ${step.details}`;
+                    const wrappedText = doc.splitTextToSize(stepText, contentWidth - 20 - indent);
+                    const neededHeight = wrappedText.length * 12 + 20;
+
+                    checkPageBreak(neededHeight);
+
+                    doc.setFillColor(255, 247, 237); // orange-50
+                    doc.setDrawColor(254, 215, 170); // orange-200
+                    doc.roundedRect(margin + indent, y - 12, contentWidth - indent, neededHeight, 3, 3, 'FD');
+                    
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(wrappedText, margin + 10 + indent, y);
+                    y += neededHeight + 5;
+                });
+            };
+
+            if (phaseName === "Execution") {
+                checkPageBreak(25);
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bolditalic');
+                doc.text("Path A: Public Bidding", margin + 10, y);
+                y += 20;
+                renderSteps(phaseSteps.filter(s => s.id >= 6 && s.id <= 9), 10);
+
+                checkPageBreak(25);
+                doc.setFontSize(12);
+                doc.setFont('helvetica', 'bolditalic');
+                doc.text("Path B: Alternative Mode", margin + 10, y);
+                y += 20;
+                renderSteps(phaseSteps.filter(s => s.id >= 10 && s.id <= 12), 10);
+            } else {
+                renderSteps(phaseSteps);
+            }
+
+            y += 10;
+        });
+
+        doc.save('procurement_lifecycle.pdf');
+    };
+
     const renderStepCard = (step: Step) => (
         <div key={step.id} onClick={() => setSelectedStep(step)} className="step-card">
             <div className="step-card-header">
@@ -120,12 +226,31 @@ const ProcessFlowTab: React.FC = () => {
                 </div>
             </div>
             <p className="step-card-details">{step.details}</p>
+            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-xs font-semibold text-gray-600">
+                    Est. Time: <span className="text-orange-700">{step.timeEstimate}</span>
+                </p>
+            </div>
         </div>
     );
 
     return (
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
-             <h2 className="text-center text-2xl md:text-3xl font-extrabold text-gray-800 mb-2">The Complete Procurement Lifecycle</h2>
+            <div className="flex justify-between items-center flex-wrap gap-4 mb-2">
+                <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800">The Complete Procurement Lifecycle</h2>
+                <button 
+                    onClick={handleExportPdf}
+                    className="btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2"
+                >
+                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Export PDF
+                </button>
+            </div>
             <p className="text-center text-gray-500 mb-8 max-w-3xl mx-auto">An interactive, AI-powered guide to the end-to-end procurement process. Click any step for details.</p>
             
             <div className="process-timeline">

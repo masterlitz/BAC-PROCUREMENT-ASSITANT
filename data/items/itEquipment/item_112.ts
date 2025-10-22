@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_112: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_112: MarketItem = {
     name: "AVR 220 V", 
     description: "A standard 220V Automatic Voltage Regulator (AVR) designed for use with office equipment to ensure stable power.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705030-00", 
     quantity: 250, 
     unit: "UNIT", 
     price: 415.80, 

@@ -1,0 +1,273 @@
+import { MarketItem } from '../../types';
+
+const referenceLink = 'https://app.hive.com/workspace/6ofLb6eovcoAtWiK4?actionId=gqmZgwdcpgJMdCiDz';
+
+export const printingAndPublicationItems: MarketItem[] = [
+  {
+    id: 96001,
+    name: "Handbook Printing",
+    description: "Doing Business in Bacolod Handbook - Developed in partnership with SGV",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 500,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "5.5x8.5, 44 pp, full color 5 pp, printing only"
+  },
+  {
+    id: 96002,
+    name: "Playbook/Showbook Printing and Layout",
+    description: "Investment Playbook/Showbook for Investment Missions and Roadshows",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203090-00",
+    quantity: 1,
+    unit: "piece",
+    price: 1000,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "8.5x11 inches, 48 pp, full color with glossy finish, Content Concept, Write up Services, Images/Picture provision, Layout and Printing, staple bind"
+  },
+  {
+    id: 96003,
+    name: "Brochure tri-fold Printing and Layout",
+    description: "Brochure tri-fold for promotional use, including full-service content creation, layout, and printing.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203080-00",
+    quantity: 1,
+    unit: "piece",
+    price: 100,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "Content Concept, Write up Services, Images/Picture provision, Layout and Printing, A4 size, full color, back to back print"
+  },
+  {
+    id: 96004,
+    name: "Investment Board and Investment Code Materials",
+    description: "Printing and layout for Investment Board and Investment Code materials.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203050-00",
+    quantity: 1,
+    unit: "piece",
+    price: 300,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "5.5x8.5, 44 pp. full color 5 pp, Content Concept, Write up Services, Images/Picture provision, Layout and Printing"
+  },
+  {
+    id: 96005,
+    name: "Investment Forum & Business Networking Kits Folder",
+    description: "Custom-made folder for Investment Forums and Business Networking Kits.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50205070-00",
+    quantity: 1,
+    unit: "piece",
+    price: 200,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "Custom made, Layout and Printing, 9.25x14, full color"
+  },
+  {
+    id: 96006,
+    name: "Sticky notes with Bacolod branding",
+    description: "Custom-branded sticky notes featuring Bacolod branding for promotional and office use.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 250,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "Custom made, Layout and Printing"
+  },
+  {
+    id: 96007,
+    name: "Calling card",
+    description: "Professional calling cards with custom layout and printing.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 20,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "2x3.5 inches, with matte lamination, custom made, Layout and Printing"
+  },
+  {
+    id: 96008,
+    name: "Notepads",
+    description: "Custom-made notepads for office use or events.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50205010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 110,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "customize made, 6x4.5, 50 sheets/pad Layout and Printing"
+  },
+  {
+    id: 96009,
+    name: "Pull up Banner",
+    description: "Portable pull-up banner for events and presentations.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 5000,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "2.75 ft x 6 ft, Layout and Pet film Printing"
+  },
+  {
+    id: 96010,
+    name: "Collapsible Backdrop",
+    description: "Large, collapsible backdrop for events, press conferences, and photo walls.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 20000,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "8x8 ft, includes Layout and Pet film Printing"
+  },
+  {
+    id: 96011,
+    name: "Collapsible Tradeshow Podium Table",
+    description: "A portable, collapsible podium table for tradeshows and events.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203990-000",
+    quantity: 1,
+    unit: "piece",
+    price: 15000,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "Includes Layout and Printing for graphics"
+  },
+  {
+    id: 96012,
+    name: "Bacolod Film Festival Tickets",
+    description: "Custom printed and pre-numbered tickets for the Bacolod Film Festival.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50299050-00",
+    quantity: 1,
+    unit: "piece",
+    price: 10,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "2x5 inches, c2s 180, glossy, pre-numbered, 5 kinds, layout services and printing."
+  },
+  {
+    id: 96013,
+    name: "Souvenir Programs (Big Size)",
+    description: "Large format souvenir programs for events, including full content and design services.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50207030-00",
+    quantity: 1,
+    unit: "piece",
+    price: 800,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "With Awards content, write up services, images/picture provision, layout and printing. Full color, glossy finish, staple bind, 9x12 inches, 40 pp"
+  },
+  {
+    id: 96014,
+    name: "Souvenir Programs (Small Size)",
+    description: "Small format souvenir programs for events, including full content and design services.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50299040-00",
+    quantity: 1,
+    unit: "piece",
+    price: 400,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "With Awards content, write up services, images/picture provision, layout and printing. Full color, glossy finish, staple bind, 6x9 inches, 32 pp."
+  },
+  {
+    id: 96015,
+    name: "Promotional Collateral (Pull up Banner)",
+    description: "Promotional pull-up banner for collateral materials.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203090-00",
+    quantity: 1,
+    unit: "piece",
+    price: 5000,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "2.75 ft x 6 ft size, includes Layout and Pet film Printing"
+  },
+  {
+    id: 96016,
+    name: "Promotional Collateral (Collapsible Backdrop)",
+    description: "Promotional collapsible backdrop for events.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203080-00",
+    quantity: 1,
+    unit: "piece",
+    price: 20000,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "8x8 ft size, includes Layout and Pet film Printing"
+  },
+  {
+    id: 96017,
+    name: "Promotional Collateral (Invitation with Envelope)",
+    description: "Custom printed invitations with envelopes for promotional events.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203040-00",
+    quantity: 1,
+    unit: "piece",
+    price: 100,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "6x8 inches, full color printed on special paper, layout and printing."
+  },
+  {
+    id: 96018,
+    name: "Press Kits (Custom Made Envelopes)",
+    description: "Custom made envelopes for press kits.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 250,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "15x10 inches, full color, 175 gsm, glossy, special paper, layout and printing"
+  },
+  {
+    id: 96019,
+    name: "Press Kits (Program Guide)",
+    description: "Program guides for inclusion in press kits.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 105,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "6x9 inch size printed on special paper, full color, layout and printing"
+  },
+  {
+    id: 96020,
+    name: "Press Kits (Notepads)",
+    description: "Custom notepads for press kits.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50203070-00",
+    quantity: 1,
+    unit: "piece",
+    price: 110,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "6x4.5 inches, 50 sheets/pad, printed on special paper, layout and printing"
+  },
+  {
+    id: 96021,
+    name: "Press Kits (Posters)",
+    description: "Posters for inclusion in press kits.",
+    category: "Printing and Publication Expenses",
+    uacsCode: "50209010-00",
+    quantity: 1,
+    unit: "piece",
+    price: 150,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "20x29 inches, c2s 180, Glossy finish, layout and printing."
+  },
+];
+
+export const trainingExpenseItems: MarketItem[] = [
+  {
+    id: 96022,
+    name: "1 Night Room Accommodation",
+    description: "One night room accommodation for participants, resource speakers, and visitors.",
+    category: "Training Expenses",
+    uacsCode: "50202010-00",
+    quantity: 1,
+    unit: "Room",
+    price: 5000,
+    referenceLinks: [referenceLink],
+    technicalSpecifications: "With Air-condition, Wi-Fi Access, Free Breakfast"
+  },
+];

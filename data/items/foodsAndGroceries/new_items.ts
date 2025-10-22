@@ -168,5 +168,19 @@ export const additionalItems: MarketItem[] = [
         itemCode: "FGS-PORKBEANS-175G",
         technicalSpecifications: "Content: Pork and Beans\nNet Weight: 175g",
         imageUrl: "https://i.ibb.co/680373G/pork-and-beans.png"
+    },
+    {
+        id: 80013,
+        name: "Rice (5kg Pack)",
+        description: "A 5-kilogram pack of well-milled rice, suitable for household consumption or for inclusion in welfare goods packs.",
+        category: "Foods and Groceries",
+        uacsCode: "50203060-00",
+        quantity: 500,
+        unit: "pack",
+        price: 460.00,
+        referenceLinks: [],
+        itemCode: "FGS-RICE-5KG-PACK",
+        technicalSpecifications: "Type: Well Milled Rice\nPackaging: 5kg per pack",
+        imageUrl: "https://i.ibb.co/VMy4S0g/rice-sack.png"
     }
 ];

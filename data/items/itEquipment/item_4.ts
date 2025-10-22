@@ -2,7 +2,7 @@ import { MarketItem } from '../../../types';
 
 export const item_4: MarketItem = { 
     id: 4, 
-    name: "057 INK", 
+    name: "Toner Cartridge, Black (High Yield)", 
     description: "High-yield black toner cartridge compatible with Canon LBP226dw and MF445dw laser printers. Designed for sharp text and reliable performance.", 
     category: "IT Equipment and Peripherals", 
     uacsCode: "50203090-00", 

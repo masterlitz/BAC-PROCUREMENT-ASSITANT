@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useRef, forwardRef, useImperativeHandle } from 'react';
+
+import React, { useState, useMemo, forwardRef, useImperativeHandle, useRef } from 'react';
 import { PpmpProjectItem, PurchaseRequest } from '../../types';
 import SourceDocumentDetailView from './SourceDocumentDetailView';
 
@@ -7,38 +8,25 @@ interface SourceDocumentsViewProps {
     purchaseRequests: PurchaseRequest[];
 }
 
-export interface SourceDocumentsViewHandles {
-    exportToPdf: () => void;
-    exportToExcel: () => void;
-}
-
-const SourceDocumentsView = forwardRef<SourceDocumentsViewHandles, SourceDocumentsViewProps>(({ consolidatedItems, purchaseRequests }, ref) => {
+const SourceDocumentsView = forwardRef<({ exportToPdf: () => void; exportToExcel: () => void; }), SourceDocumentsViewProps>(({ consolidatedItems, purchaseRequests }, ref) => {
     const offices = useMemo(() => [...new Set(consolidatedItems.map(item => item.office))].sort(), [consolidatedItems]);
     const [selectedSourceOffice, setSelectedSourceOffice] = useState<string | null>(offices[0] || null);
     
-    const detailViewRef = useRef<{ exportToPdf: () => void; exportToExcel: () => void; }>(null);
-
-    useImperativeHandle(ref, () => ({
-        exportToPdf: () => {
-            if (selectedSourceOffice) {
-                detailViewRef.current?.exportToPdf();
-            } else {
-                alert("Please select an office to export.");
-            }
-        },
-        exportToExcel: () => {
-            if (selectedSourceOffice) {
-                detailViewRef.current?.exportToExcel();
-            } else {
-                alert("Please select an office to export.");
-            }
-        }
-    }));
-
     const selectedOfficeItems = useMemo(() => {
         if (!selectedSourceOffice) return [];
         return consolidatedItems.filter(item => item.office === selectedSourceOffice);
     }, [consolidatedItems, selectedSourceOffice]);
+
+    const detailViewRef = useRef<{ exportToPdf: () => void; exportToExcel: () => void; }>(null);
+
+    useImperativeHandle(ref, () => ({
+        exportToPdf: () => {
+            detailViewRef.current?.exportToPdf();
+        },
+        exportToExcel: () => {
+            detailViewRef.current?.exportToExcel();
+        },
+    }));
 
     return (
         <div className="flex h-full gap-4 -mx-6 -my-6">
@@ -49,7 +37,7 @@ const SourceDocumentsView = forwardRef<SourceDocumentsViewHandles, SourceDocumen
                         <li key={o}>
                             <button
                                 onClick={() => setSelectedSourceOffice(o)}
-                                className={`w-full text-left p-2 text-xs rounded transition-all ${selectedSourceOffice === o ? 'bg-orange-500 text-white font-bold' : 'text-gray-600 hover:bg-gray-100 hover:text-black'}`}
+                                className={`w-full text-left p-2 text-xs rounded transition-all ${selectedSourceOffice === o ? 'bg-orange-500 text-white font-bold' : 'text-gray-600 hover:bg-gray-100'}`}
                             >
                                 {o}
                             </button>

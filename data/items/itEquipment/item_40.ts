@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_40: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_40: MarketItem = {
     name: "800 VA UPS", 
     description: "An 800 VA Uninterruptible Power Supply (UPS) to provide battery backup and surge protection for computers and other electronic equipment.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705030-00", 
     quantity: 90, 
     unit: "PC", 
     price: 6219.00, 

@@ -1,5 +1,18 @@
-import React from 'react';
+
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { PpmpProjectItem, PurchaseRequest } from '../../types';
+
+declare global {
+    interface Window {
+        jspdf: { 
+            jsPDF: new (options?: any) => any;
+            plugin: any;
+        };
+    }
+}
+interface jsPDFWithAutoTable extends InstanceType<typeof window.jspdf.jsPDF> {
+  autoTable: (options: any) => jsPDFWithAutoTable;
+}
 
 interface BudgetViewProps {
     consolidatedItems: PpmpProjectItem[];
@@ -7,7 +20,7 @@ interface BudgetViewProps {
     onAddRequest: (requests: PurchaseRequest[]) => void;
 }
 
-const BudgetView: React.FC<BudgetViewProps> = ({ consolidatedItems, purchaseRequests, onAddRequest }) => {
+const BudgetView = forwardRef<({ exportToPdf: () => void; }), BudgetViewProps>(({ consolidatedItems, purchaseRequests, onAddRequest }, ref) => {
 
     const handleCreatePr = (item: PpmpProjectItem) => {
         const newPr: PurchaseRequest = {
@@ -20,6 +33,54 @@ const BudgetView: React.FC<BudgetViewProps> = ({ consolidatedItems, purchaseRequ
         };
         onAddRequest([...purchaseRequests, newPr]);
     };
+
+    useImperativeHandle(ref, () => ({
+        exportToPdf: () => {
+             if (!window.jspdf || !window.jspdf.jsPDF) {
+                alert("PDF export library not loaded.");
+                return;
+            }
+
+            const doc = new window.jspdf.jsPDF({ orientation: 'landscape' }) as jsPDFWithAutoTable;
+            
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text("Budget Utilization Report", doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
+            
+            const head = [['Project ID', 'Description', 'Budget (PHP)', 'Consumed (PHP)', 'Balance (PHP)']];
+            const body = consolidatedItems.map(item => {
+                const consumed = purchaseRequests
+                    .filter(pr => pr.projectId === item.id)
+                    .reduce((sum, pr) => sum + pr.actualCost, 0);
+                const balance = item.estimatedBudget - consumed;
+
+                return [
+                    item.id,
+                    item.generalDescription,
+                    item.estimatedBudget.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+                    consumed.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+                    balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+                ];
+            });
+
+            doc.autoTable({
+                startY: 60,
+                head: head,
+                body: body,
+                theme: 'striped',
+                headStyles: { fillColor: '#f97316' },
+                columnStyles: { 
+                    0: { cellWidth: 50 },
+                    1: { cellWidth: 'auto' },
+                    2: { halign: 'right' },
+                    3: { halign: 'right' },
+                    4: { halign: 'right' },
+                },
+            });
+            
+            doc.save("PPMP_Budget_Utilization_Report.pdf");
+        }
+    }));
 
     return (
         <div className="space-y-6">
@@ -78,6 +139,6 @@ const BudgetView: React.FC<BudgetViewProps> = ({ consolidatedItems, purchaseRequ
             </div>
         </div>
     );
-};
+});
 
 export default BudgetView;

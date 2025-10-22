@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { bacolodCityLogo } from '../data/logo';
 
@@ -45,8 +46,8 @@ const Header: React.FC = () => {
             <div className="mb-4 flex justify-center">
                 <img src={bacolodCityLogo} alt="Bacolod BAC Logo" className="h-32" />
             </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800">BIDS AND AWARDS COMMITTEE</h1>
-            <p className="text-gray-500 mt-2">BAC Procurement Assistant</p>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-800 dark:text-gray-100">BIDS AND AWARDS COMMITTEE</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">BAC Procurement Assistant</p>
             
             {/* New BACOLOD logo text */}
             <div 
@@ -68,7 +69,7 @@ const Header: React.FC = () => {
                 <span style={orangeTextStyle}>g</span>
                 <span style={blueTextStyle}>ether!</span>
             </p>
-            <hr className="my-6 border-orange-200" />
+            <hr className="my-6 border-orange-200 dark:border-gray-700" />
         </header>
     );
 };

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { PpmpProjectItem } from '../../types';
 import { generatePpmpExecutiveSummary } from '../../services/geminiService';
@@ -60,41 +61,50 @@ const PieChart: React.FC<{ data: { name: string; value: number }[] }> = ({ data 
 const DashboardView = forwardRef<({ exportToPdf: () => void; }), DashboardViewProps>(({ consolidatedItems }, ref) => {
     const [summaryData, setSummaryData] = useState<any>(null);
     const [loadingSummary, setLoadingSummary] = useState(false);
+    const [summaryError, setSummaryError] = useState('');
 
     useEffect(() => {
-        const generateSummary = async () => {
-            if (consolidatedItems.length === 0) {
-                setSummaryData(null);
-                return;
-            };
-            setLoadingSummary(true);
-            try {
-                const categorized = consolidatedItems.map(item => ({...item, category: categorizeItem(item.generalDescription)}));
-                const summary = await generatePpmpExecutiveSummary(categorized);
-                setSummaryData(summary);
-            } catch (error) {
-                console.error("Failed to generate summary:", error);
-            } finally {
-                setLoadingSummary(false);
-            }
-        };
-        generateSummary();
+        setSummaryData(null);
     }, [consolidatedItems]);
+
+    const handleGenerateSummary = async () => {
+        if (consolidatedItems.length === 0) {
+            setSummaryData(null);
+            return;
+        }
+        setLoadingSummary(true);
+        setSummaryError('');
+        try {
+            const categorized = consolidatedItems.map(item => ({...item, category: categorizeItem(item.generalDescription)}));
+            const summary = await generatePpmpExecutiveSummary(categorized);
+            setSummaryData(summary);
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            console.error("Failed to generate summary:", error);
+            setSummaryError(`Failed to generate summary. The AI returned an error: "${errorMessage}". This may be due to rate limits. Please try again in a minute.`);
+        } finally {
+            setLoadingSummary(false);
+        }
+    };
 
     useImperativeHandle(ref, () => ({
         exportToPdf: () => {
             if (!summaryData) {
-                alert("Please wait for the AI summary to generate before exporting.");
+                alert("Please generate the AI summary before exporting.");
                 return;
             }
-            if (!window.jspdf || !window.jspdf.jsPDF) {
+             const jspdfModule = window.jspdf;
+            if (!jspdfModule || !jspdfModule.jsPDF) {
                 alert("PDF export library not loaded. Please check your connection and try again.");
                 return;
             }
 
-            const doc = new window.jspdf.jsPDF() as jsPDFWithAutoTable;
+            const doc = new jspdfModule.jsPDF() as jsPDFWithAutoTable;
+            if (typeof doc.autoTable !== 'function') {
+                alert("PDF autoTable plugin is not loaded. Please try again.");
+                return;
+            }
             
-            // Header
             doc.setFontSize(18);
             doc.setFont('helvetica', 'bold');
             doc.text("PPMP Consolidator Dashboard Report", 105, 20, { align: 'center' });
@@ -104,7 +114,6 @@ const DashboardView = forwardRef<({ exportToPdf: () => void; }), DashboardViewPr
             
             let startY = 40;
 
-            // KPIs
             const kpiBody = [[
                 `Total Budget:\n${`₱${(summaryData.totalBudget || 0).toLocaleString()}`}`,
                 `Total Projects:\n${consolidatedItems.length.toLocaleString()}`,
@@ -117,52 +126,40 @@ const DashboardView = forwardRef<({ exportToPdf: () => void; }), DashboardViewPr
                 body: kpiBody,
                 bodyStyles: { fontStyle: 'bold', fontSize: 10, halign: 'center', cellPadding: 8 }
             });
-            startY = (doc as any).autoTable.previous.finalY + 15;
+            startY = (doc as any).lastAutoTable.finalY + 15;
             
-            // Executive Summary
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'bold');
-            doc.text("Executive Summary (AI Generated)", 14, startY);
+            doc.setFontSize(12); doc.setFont('helvetica', 'bold'); doc.text("Executive Summary (AI Generated)", 14, startY);
             startY += 7;
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10); doc.setFont('helvetica', 'normal');
             const summaryLines = doc.splitTextToSize(summaryData.summary, 180);
             doc.text(summaryLines, 14, startY);
             startY += summaryLines.length * 3.5 + 10;
 
-            // Analysis
-            doc.setFontSize(12);
-            doc.setFont('helvetica', 'bold');
-            doc.text("Strategic Analysis", 14, startY);
+            doc.setFontSize(12); doc.setFont('helvetica', 'bold'); doc.text("Strategic Analysis", 14, startY);
             startY += 7;
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(10); doc.setFont('helvetica', 'italic');
             const analysisLines = doc.splitTextToSize(summaryData.analysis, 180);
             doc.text(analysisLines, 14, startY);
             startY += analysisLines.length * 3.5 + 15;
 
-            // Top Categories Table
             doc.autoTable({
-                startY: startY,
-                head: [['Top 5 Spending Categories', 'Budget', '# of Projects']],
+                startY: startY, head: [['Top 5 Spending Categories', 'Budget', '# of Projects']],
                 body: summaryData.topCategories.map((cat: any) => [cat.category, `₱${cat.budget.toLocaleString()}`, cat.projectCount]),
-                theme: 'striped',
-                headStyles: { fillColor: '#f97316' },
+                theme: 'striped', headStyles: { fillColor: '#f97316' },
             });
-            startY = (doc as any).autoTable.previous.finalY + 15;
+            startY = (doc as any).lastAutoTable.finalY + 15;
 
-            // Key Projects Table
             doc.autoTable({
-                startY: startY,
-                head: [['Top 5 Key Projects', 'Office', 'Budget']],
+                startY: startY, head: [['Top 5 Key Projects', 'Office', 'Budget']],
                 body: summaryData.keyProjects.map((proj: any) => [proj.description, proj.office, `₱${proj.budget.toLocaleString()}`]),
-                theme: 'striped',
-                headStyles: { fillColor: '#16a34a' },
+                theme: 'striped', headStyles: { fillColor: '#16a34a' },
             });
 
             doc.save("PPMP_Dashboard_Report.pdf");
         }
     }));
+    
+    const clientSideTotalBudget = useMemo(() => consolidatedItems.reduce((sum, item) => sum + item.estimatedBudget, 0), [consolidatedItems]);
 
     const procurementModeData = useMemo(() => {
         const modeMap: { [key: string]: number } = {};
@@ -177,23 +174,33 @@ const DashboardView = forwardRef<({ exportToPdf: () => void; }), DashboardViewPr
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-800">PPMP Dashboard</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <ConsolidatorKPI title="Total Budget" value={`₱${(summaryData?.totalBudget || 0).toLocaleString()}`} />
+                <ConsolidatorKPI title="Total Budget" value={`₱${(summaryData?.totalBudget || clientSideTotalBudget).toLocaleString()}`} />
                 <ConsolidatorKPI title="Total Projects" value={consolidatedItems.length.toLocaleString()} />
-                <ConsolidatorKPI title="Avg. Budget per Project" value={`₱${consolidatedItems.length > 0 ? (summaryData?.totalBudget / consolidatedItems.length).toLocaleString(undefined, {maximumFractionDigits: 0}) : 0}`} />
+                <ConsolidatorKPI title="Avg. Budget per Project" value={`₱${consolidatedItems.length > 0 ? ((summaryData?.totalBudget || clientSideTotalBudget) / consolidatedItems.length).toLocaleString(undefined, {maximumFractionDigits: 0}) : 0}`} />
                 <ConsolidatorKPI title="Unique Offices" value={[...new Set(consolidatedItems.map(item => item.office))].length.toString()} />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow-sm border">
-                    <h3 className="font-bold text-gray-700 mb-2">Executive Summary (AI Generated)</h3>
+                    <div className="flex justify-between items-center mb-2">
+                        <h3 className="font-bold text-gray-700">Executive Summary (AI Generated)</h3>
+                        <button onClick={handleGenerateSummary} disabled={loadingSummary} className="btn text-xs bg-orange-500 hover:bg-orange-600 text-white font-semibold py-1 px-3 rounded-md disabled:bg-gray-400">
+                            {loadingSummary ? 'Generating...' : summaryData ? 'Regenerate Summary' : 'Generate Summary'}
+                        </button>
+                    </div>
                     {loadingSummary && <Loader text="Generating AI summary..." />}
-                    {summaryData && (
+                    {summaryError && <div className="text-red-600 text-xs p-2 bg-red-50 rounded">{summaryError}</div>}
+                    {summaryData ? (
                         <div className="text-sm text-gray-600 space-y-3">
                             <p className="whitespace-pre-wrap">{summaryData.summary}</p>
                             <div className="border-t pt-3">
                                 <h4 className="font-semibold text-gray-800 mb-1">Strategic Analysis:</h4>
                                 <p className="italic">{summaryData.analysis}</p>
                             </div>
+                        </div>
+                    ) : !loadingSummary && (
+                         <div className="text-center py-8 text-gray-500">
+                            <p>Click "Generate Summary" to get AI-powered insights on the consolidated data.</p>
                         </div>
                     )}
                 </div>

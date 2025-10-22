@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../types';
 
 export const machineryRepairAndMaintenance: MarketItem[] = [
@@ -98,5 +99,16 @@ export const machineryRepairAndMaintenance: MarketItem[] = [
         itemCode: "RMT-TNR-MX237",
         technicalSpecifications: "Type: Toner Cartridge\nColor: Black\nCompatibility: Sharp AR-6020, AR-6023, AR-6026 series\nYield: Approx. 10,000 pages",
         imageUrl: "https://i.ibb.co/h1gYyBq/brother-toner-compatible.png"
-    }
+    },
+    { id: 81008, name: "Battery 12V 9-Plates (for Genset)", description: "Heavy-duty 12-volt, 9-plate battery for Cummins 100 EPTC Silent Diesel generator sets.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 10200.00, referenceLinks: [] },
+    { id: 81009, name: "C-Bolt", description: "C-shaped bolt for various machinery and equipment repair.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 450.00, referenceLinks: [] },
+    { id: 81010, name: "U-Clamps", description: "U-shaped clamps for securing pipes, cables, or other components on machinery.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 750.00, referenceLinks: [] },
+    { id: 81011, name: "Leaf Spring #2", description: "Replacement leaf spring, model #2, for vehicle or equipment suspension systems.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 2650.00, referenceLinks: [] },
+    { id: 81012, name: "Leaf Spring #8", description: "Replacement leaf spring, model #8, for vehicle or equipment suspension systems.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 2250.00, referenceLinks: [] },
+    { id: 81013, name: "Tire 19.5 x 24 with Flaps & Tube (for CASE BHL)", description: "Heavy equipment tire, size 19.5 x 24, complete with flaps and inner tube for CASE Backhoe Loaders.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 55000.00, referenceLinks: [] },
+    { id: 81014, name: "Battery 11-Plates", description: "Heavy-duty 12-volt, 11-plate battery for various equipment.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 10800.00, referenceLinks: [] },
+    { id: 81015, name: "Hydraulic Hose 3/4\" Ø 50\"L, 6000 psi (for HMK Excavator)", description: "High-pressure hydraulic hose, 3/4-inch diameter, 50-inch length, rated for 6000 psi. For HMK Amphibious Excavators.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 7460.00, referenceLinks: [] },
+    { id: 81016, name: "Hydraulic Hose Assembly 3/8\" x 104\"", description: "Complete hydraulic hose assembly, 3/8-inch diameter, 104-inch length.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 4310.00, referenceLinks: [] },
+    { id: 81017, name: "Strobe Light (for Isuzu Long Bed)", description: "Warning strobe light for mounting on service trucks like the Isuzu Long Bed.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 4800.00, referenceLinks: [] },
+    { id: 81018, name: "Battery 12V 19-Plates 2D (for HMK Mini BHL)", description: "Heavy-duty 12-volt, 19-plate 2D battery for HMK Mini Backhoe Loaders.", category: "Repair & Maintenance - Machinery & Equipment", uacsCode: "50213050", quantity: 100, unit: "pc", price: 17800.00, referenceLinks: [] },
 ];

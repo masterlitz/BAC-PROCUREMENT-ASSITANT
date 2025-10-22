@@ -1,12 +1,19 @@
 
 
+// FIX: Add missing React import to resolve React.ReactNode type.
+import React from 'react';
 
+export type TabKey = 'dashboard' | 'advisor' | 'scoping' | 'flow' | 'timeline-calc' | 'checklist' | 'agreements' | 'comparator' | 'post-generator' | 'planning' | 'resolution-generator' | 'auditor' | 'trivia-generator' | 'web-scraper' | 'ppmp-exporter' | 'rfq-generator' | 'ppmp-generator' | 'account' | 'user-management' | 'downloadable-forms' | 'specification-generator' | 'bac-analytics' | 'catalog' | 'qr-maker' | 'email-composer' | 'pdf-to-image' | 'ppmp-consolidator' | 'item-catalog-assistant' | 'contract-auditor' | 'supplier-performance' | 'directory' | 'infographics' | 'catalog-tutorial';
 
-export type TabKey = 'dashboard' | 'advisor' | 'scoping' | 'flow' | 'timeline-calc' | 'checklist' | 'agreements' | 'comparator' | 'post-generator' | 'planning' | 'resolution-generator' | 'auditor' | 'trivia-generator' | 'web-scraper' | 'ppmp-exporter' | 'rfq-generator' | 'ppmp-generator' | 'account' | 'user-management' | 'downloadable-forms' | 'specification-generator' | 'bac-analytics' | 'catalog' | 'qr-maker' | 'email-composer' | 'pdf-to-image' | 'ppmp-consolidator' | 'item-catalog-assistant';
-
-export type ModalKey = 'analytics' | 'catalog' | 'qr-maker' | 'email-composer' | 'ppmp-consolidator' | 'changelog' | 'infographics' | null;
+export type ModalKey = 'analytics' | 'catalog' | 'qr-maker' | 'email-composer' | 'ppmp-consolidator' | 'changelog' | 'infographics' | 'system-auditor' | null;
 
 export type NonNullableModalKey = NonNullable<ModalKey>;
+
+export interface ChatMessage {
+    id: number;
+    sender: 'user' | 'ai';
+    text: string;
+}
 
 export interface ChangelogEntry {
   version: string;
@@ -90,6 +97,8 @@ export interface SupplierQuote {
     price: number;
     link: string;
     imageUrl: string;
+    source?: string; // Added for citing sources
+    title?: string;  // Added for citing sources
 }
 
 export interface MarketItemVariant {
@@ -201,6 +210,23 @@ export interface DocumentAuditResult {
   findings: AuditFinding[];
 }
 
+// New types for Duplicate Item Audit
+export interface DuplicateItem {
+    itemCode: string;
+    name: string;
+    price: string;
+}
+
+export interface DuplicateItemGroup {
+    suggestedName: string;
+    items: DuplicateItem[];
+}
+
+export interface DuplicateItemAuditResult {
+    summary: string;
+    duplicates: DuplicateItemGroup[];
+}
+
 export interface BrandAuditFinding {
   itemDescription: string;
   identifiedBrand: string | 'None';
@@ -214,6 +240,36 @@ export interface BrandAuditResult {
   summary: string;
   findings: BrandAuditFinding[];
 }
+
+// New Types for Contract Auditor
+export interface ContractFinding {
+    clause_text: string;
+    risk_level: 'High' | 'Medium' | 'Low' | 'Info';
+    category: 'Ambiguity' | 'Unfair Term' | 'Missing Information' | 'Compliance' | 'Contradiction';
+    issue: string;
+    recommendation: string;
+}
+
+export interface ContractAuditResult {
+    overall_assessment: string;
+    executive_summary: string;
+    findings: ContractFinding[];
+}
+
+// New Types for System Development Auditor
+export interface SystemAuditFinding {
+    requirement: string;
+    featureStatus: 'Implemented' | 'Partially Implemented' | 'Missing' | 'Discrepancy';
+    analysis: string;
+    recommendation: string;
+}
+
+export interface SystemAuditResult {
+    overallAssessment: string;
+    summary: string;
+    findings: SystemAuditFinding[];
+}
+
 
 export interface SocialMediaPostItem {
   referenceNo: string;
@@ -240,6 +296,12 @@ export interface ScrapedVideoData {
   hashtags: string;
 }
 
+export interface ScrapedFacebookPost {
+  text: string;
+  date: string;
+  link: string;
+}
+
 export interface PpmpItem {
   isCategory: boolean;
   description: string; // Holds category name or item description
@@ -255,6 +317,7 @@ export interface PpmpItem {
   quantity?: string;
   uom?: string;
   unitCost?: string;
+  estimatedBudget?: string;
   
   jan?: string;
   feb?: string;
@@ -281,8 +344,8 @@ export interface PpmpProjectItem {
   papCode?: string;
   generalDescription: string;
   specificationDetails?: string;
-  uom?: string;
-  quantity?: number;
+  uom: string;
+  quantity: number;
   procurementMode: string;
   preProcCon?: 'Yes' | 'No' | '';
   procurementStart?: string;
@@ -345,7 +408,7 @@ export interface ExtractedRfqData {
     hashtags: string;
 }
 
-export type DocumentType = 'resolution' | 'rfq' | 'abstract' | 'po' | 'noa';
+export type DocumentType = 'resolution' | 'rfq' | 'abstract' | 'po' | 'noa' | 'ntp' | 'contract';
 
 export interface ProcurementProjectItem {
     itemNo: number;
@@ -411,6 +474,14 @@ export interface ProcurementProjectData {
     // For NOA
     noaDate?: string;
     performanceSecurity?: string;
+    
+    // For NTP
+    ntpDate?: string;
+
+    // For Contract
+    contractDate?: string;
+    contractVenue?: string;
+    witnesses?: string[];
 }
 
 export interface PurchaseRequest {
@@ -475,4 +546,13 @@ export interface PpmpAnalysisResult {
   overallAssessment: 'Good' | 'Needs Review' | 'Has Issues';
   executiveSummary: string;
   keyFindings: PpmpAnalysisFinding[];
+}
+
+export interface MockProcurementRequest {
+    prNumber: string;
+    projectTitle: string;
+    endUser: string;
+    abc: number;
+    status: 'For BAC Review' | 'For Post-Qualification' | 'Awarded' | 'Notice to Proceed Issued' | 'Completed';
+    lastUpdated: string;
 }

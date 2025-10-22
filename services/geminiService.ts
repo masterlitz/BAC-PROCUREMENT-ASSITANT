@@ -1,7 +1,9 @@
+
 import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
-import { ExtractedDocInfo, ExtractedItem, ComparisonResult, DocumentCheckResult, SocialMediaPostItem, DocumentAuditResult, SocialMediaTrivia, SupplierQuote, ScrapedVideoData, PpmpItem, ExtractedRfqData, DocumentType, ProcurementProjectData, ProcurementProjectItem, AuditFinding, PpmpProjectItem, CatalogComparisonResult, CatalogComparisonFinding, PpmpSummaryData, MarketItem, CatalogItem, CatalogAssistantResult, BrandAuditResult, PpmpAnalysisResult } from '../types';
+import { ExtractedDocInfo, ExtractedItem, ComparisonResult, DocumentCheckResult, SocialMediaPostItem, DocumentAuditResult, SocialMediaTrivia, SupplierQuote, ScrapedVideoData, PpmpItem, ExtractedRfqData, DocumentType, ProcurementProjectData, ProcurementProjectItem, AuditFinding, PpmpProjectItem, CatalogComparisonResult, CatalogComparisonFinding, PpmpSummaryData, MarketItem, CatalogItem, CatalogAssistantResult, BrandAuditResult, PpmpAnalysisResult, ContractAuditResult, ScrapedFacebookPost, DuplicateItemAuditResult, SystemAuditResult } from '../types';
 import { marketData } from "../data/marketData";
 import { marketCategories } from "../data/marketData";
+import { MENU_ITEMS } from "../constants";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -30,6 +32,211 @@ const safeParseJsonResponse = <T>(responseText: string | undefined, functionName
         throw new Error(`AI returned a response for ${functionName}, but it was not valid JSON.`);
     }
 };
+
+export const auditSystemFeatures = async (file: File): Promise<SystemAuditResult> => {
+    const model = 'gemini-2.5-flash';
+    const base64Data = await fileToBase64(file);
+
+    // Generate a description of the current application's features from MENU_ITEMS
+    const appFeaturesDescription = MENU_ITEMS
+        .filter(item => !item.isHeader && item.description)
+        .map(item => `- **${item.label}**: ${item.description}`)
+        .join('\n');
+
+    const prompt = `
+        You are an expert AI System Analyst. Your task is to compare a provided "Terms of Reference" (TOR) document against a description of an existing web application's features. You must identify gaps, discrepancies, and implemented features.
+
+        **EXISTING APPLICATION FEATURES:**
+        The current application has the following tools and features:
+        ${appFeaturesDescription}
+
+        **USER'S TERMS OF REFERENCE (TOR):**
+        The attached document contains the requirements for the system.
+
+        **YOUR ANALYSIS TASK:**
+        1.  Read the TOR document and identify each distinct requirement or feature requested.
+        2.  For each requirement, compare it against the "EXISTING APPLICATION FEATURES" list.
+        3.  Determine the status of each requirement:
+            *   **'Implemented'**: If the feature is clearly and fully present in the existing application.
+            *   **'Partially Implemented'**: If the feature exists but is missing some aspects mentioned in the TOR.
+            *   **'Missing'**: If the feature from the TOR does not exist in the current application.
+            *   **'Discrepancy'**: If the feature exists, but its functionality is different from what the TOR describes.
+        4.  Provide a detailed 'analysis' for each finding, explaining your reasoning.
+        5.  Provide a concrete 'recommendation' for each finding (e.g., "No action needed.", "Develop a new module for this feature.", "Enhance the existing 'Market Scoping' tool to include this functionality.").
+        6.  Write a high-level 'overallAssessment' and a concise 'summary' of your findings.
+
+        **CRITICAL: Output Schema**
+        You MUST return a single, clean JSON object. Do not include any text, markdown formatting like \`\`\`json, or any text before or after the JSON object.
+    `;
+
+    const responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+            overallAssessment: { type: Type.STRING, description: "A high-level one-sentence assessment of the system's compliance with the TOR." },
+            summary: { type: Type.STRING, description: "A concise paragraph summarizing the key findings, including counts of implemented, missing, or partial features." },
+            findings: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        requirement: { type: Type.STRING, description: "The specific requirement extracted from the TOR document." },
+                        featureStatus: { type: Type.STRING, description: "'Implemented', 'Partially Implemented', 'Missing', or 'Discrepancy'." },
+                        analysis: { type: Type.STRING, description: "A detailed analysis explaining the status." },
+                        recommendation: { type: Type.STRING, description: "A concrete, actionable recommendation for development." }
+                    },
+                    required: ['requirement', 'featureStatus', 'analysis', 'recommendation']
+                }
+            }
+        },
+        required: ['overallAssessment', 'summary', 'findings']
+    };
+
+    const response = await ai.models.generateContent({
+        model,
+        contents: {
+            parts: [
+                { text: prompt },
+                { inlineData: { mimeType: file.type, data: base64Data } }
+            ]
+        },
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: responseSchema,
+        },
+    });
+
+    return safeParseJsonResponse<SystemAuditResult>(response.text, 'auditSystemFeatures');
+};
+
+export const getUacsCodeSuggestion = async (itemName: string): Promise<string> => {
+    const model = 'gemini-2.5-flash';
+    const prompt = `
+        You are an expert AI in Philippine Government procurement and accounting. Your single task is to provide the most appropriate Unified Accounts Code Structure (UACS) Object Code for a given item name.
+        Item Name: "${itemName}"
+        Return ONLY the UACS code as a plain text string (e.g., "50203010-00"). Do not add any explanation or formatting. If you cannot determine a code, return "N/A".
+    `;
+
+    const response = await ai.models.generateContent({ model, contents: prompt });
+    if (!response.text) {
+        return "N/A";
+    }
+    return response.text.trim();
+};
+
+export const generateItemDescriptionAndSpecs = async (itemName: string): Promise<{ description: string; techSpecs: string }> => {
+    const model = 'gemini-2.5-flash';
+    const prompt = `
+        You are an expert procurement data specialist AI. Your task is to generate a detailed description and technical specifications for an item to be included in a government procurement catalog.
+        Item Name: "${itemName}"
+
+        **CRITICAL: Output Schema**
+        You MUST return a single, clean JSON object. Do not include any text, markdown formatting like \`\`\`json, or any text before or after the JSON object.
+
+        - **description:** Write a concise, one-paragraph description suitable for a procurement catalog. It should highlight the item's key features and intended use.
+        - **techSpecs:** List the key technical specifications as a multi-line string. Use "\\n" for new lines. Include details like size, material, color, capacity, compatibility, etc.
+    `;
+    
+    const responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+            description: { type: Type.STRING, description: "A concise and informative product description." },
+            techSpecs: { type: Type.STRING, description: "Key technical specifications as a multi-line string." }
+        },
+        required: ['description', 'techSpecs']
+    };
+    
+    const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: responseSchema,
+        },
+    });
+
+    return safeParseJsonResponse<{ description: string; techSpecs: string }>(response.text, 'generateItemDescriptionAndSpecs');
+};
+
+export const generateMarketScopingRecommendations = async (itemName: string, techSpecs: string, quotes: {price: string}[], deliveryDate: string): Promise<any> => {
+    const model = 'gemini-2.5-flash';
+    const prices = quotes.map(q => parseFloat(q.price)).filter(p => !isNaN(p) && p > 0);
+    const avgPrice = prices.length > 0 ? prices.reduce((a, b) => a + b, 0) / prices.length : 0;
+    
+    const prompt = `
+        You are a senior procurement analyst AI for a Philippine LGU. Given the details for a new catalog item, generate concise, professional recommendations for a Market Scoping Checklist. Be realistic and formal.
+
+        Item Name: "${itemName}"
+        Technical Specs: "${techSpecs.replace(/\n/g, ', ')}"
+        Average Canvassed Price: PHP ${avgPrice.toFixed(2)}
+        Expected Delivery Date: ${deliveryDate || 'Not specified'}
+
+        **Your Task:**
+        Generate recommendations for each parameter below based ONLY on the provided data.
+
+        **CRITICAL: Output Schema**
+        You MUST return ONLY a single, clean JSON object. No markdown, explanations, or other text.
+        - costEstimate: Comment on the reasonableness of the canvassed price.
+        - designSpec: Comment on the adequacy and clarity of the technical specifications for government procurement.
+        - technicalCriteria: Comment on whether the market can likely support these technical requirements.
+        - deliveryLeadTime: Comment on the feasibility of the expected delivery date, if provided.
+        - storage: Mention any obvious storage needs based on the item name (e.g., "Requires dry storage."). If none, state "Standard office storage required."
+        - risks: Identify potential risks (e.g., "Price volatility for electronic components."). If none are obvious, state "Low risk; item is commonly available."
+    `;
+    
+    const responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+            costEstimate: { type: Type.STRING },
+            designSpec: { type: Type.STRING },
+            technicalCriteria: { type: Type.STRING },
+            deliveryLeadTime: { type: Type.STRING },
+            storage: { type: Type.STRING },
+            risks: { type: Type.STRING },
+        },
+        required: ['costEstimate', 'designSpec', 'technicalCriteria', 'deliveryLeadTime', 'storage', 'risks']
+    };
+
+    const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: responseSchema,
+        },
+    });
+
+    return safeParseJsonResponse<any>(response.text, 'generateMarketScopingRecommendations');
+};
+
+
+export const generateRequestJustification = async (items: { itemName: string; description: string }[], requestingDept: string): Promise<string> => {
+    const model = 'gemini-2.5-flash';
+    const itemsList = items.map(item => `- ${item.itemName}: ${item.description}`).join('\n');
+    
+    const prompt = `
+        You are an expert administrative AI for the Bacolod City Government. Your task is to write a formal, professional justification for a "Request for Item Inclusion in Procurement Catalog".
+
+        **Context:**
+        - **Requesting Department:** ${requestingDept}
+        - **Items Requested:**
+        ${itemsList}
+
+        **Your Task:**
+        Draft a very concise, formal justification. It should be ONE short paragraph (2-4 sentences max). The justification must state the purpose and importance of including these items for the department's operational efficiency.
+
+        **CRITICAL RULES:**
+        - Do NOT use any markdown formatting.
+        - Do NOT use asterisks (*) for bolding or any other purpose.
+        - The output must be plain text only.
+    `;
+
+    const response = await ai.models.generateContent({ model, contents: prompt });
+    if (!response.text) {
+        throw new Error("AI failed to generate a justification.");
+    }
+    return response.text.trim();
+};
+
 
 export const auditForBrandSpecifications = async (file: File): Promise<BrandAuditResult> => {
     const model = 'gemini-2.5-flash';
@@ -100,6 +307,74 @@ export const auditForBrandSpecifications = async (file: File): Promise<BrandAudi
 
     return safeParseJsonResponse<BrandAuditResult>(response.text, 'auditForBrandSpecifications');
 };
+
+export const auditForDuplicateCatalogItems = async (file: File): Promise<DuplicateItemAuditResult> => {
+    const model = 'gemini-2.5-flash';
+    const base64Data = await fileToBase64(file);
+
+    const prompt = `
+        You are an expert data analyst AI specializing in cleaning and deduplicating procurement catalogs. Your task is to analyze the provided document, which is a catalog report, and identify items that are likely duplicates.
+
+        **Instructions:**
+        1.  Extract all items from the document, including their \`Item Code\`, \`Name\`, and \`Price\`.
+        2.  Intelligently identify groups of items that refer to the exact same product but may have different names due to typos, inconsistent spacing, or minor wording variations. For example, "2\\" Finishing Nails" and "2 inch finishing nail" are duplicates. However, "2 Gang Switch" and "2 Gang 3-Way Switch" are DIFFERENT products and should NOT be grouped. Be precise in your analysis.
+        3.  Group all identified true duplicates together.
+        4.  For each group, suggest a single, standardized \`suggestedName\` for the item.
+        5.  Create a JSON object containing a summary of your findings and a list of the duplicate groups.
+        6.  The summary should state how many total items were analyzed and how many groups of duplicates were found.
+        7.  If no duplicates are found, the \`duplicates\` array MUST be empty.
+
+        **CRITICAL: Output Schema**
+        - You MUST return ONLY a single, clean JSON object. Do not add any conversational text, explanations, or markdown formatting like \`\`\`json before or after the JSON.
+    `;
+
+    const responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+            summary: { type: Type.STRING, description: "A brief summary of findings, e.g., 'Found 3 groups of duplicate items out of 150 total entries.'" },
+            duplicates: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        suggestedName: { type: Type.STRING, description: "A standardized name for the duplicate items." },
+                        items: {
+                            type: Type.ARRAY,
+                            items: {
+                                type: Type.OBJECT,
+                                properties: {
+                                    itemCode: { type: Type.STRING },
+                                    name: { type: Type.STRING },
+                                    price: { type: Type.STRING }
+                                },
+                                required: ['itemCode', 'name', 'price']
+                            }
+                        }
+                    },
+                    required: ['suggestedName', 'items']
+                }
+            }
+        },
+        required: ['summary', 'duplicates']
+    };
+
+    const response = await ai.models.generateContent({
+        model,
+        contents: {
+            parts: [
+                { text: prompt },
+                { inlineData: { mimeType: file.type, data: base64Data } }
+            ]
+        },
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: responseSchema,
+        },
+    });
+
+    return safeParseJsonResponse<DuplicateItemAuditResult>(response.text, 'auditForDuplicateCatalogItems');
+};
+
 
 export const generateImageForItem = async (itemName: string): Promise<string> => {
     const model = 'imagen-3.0-generate-002';
@@ -313,18 +588,18 @@ export const analyzeDocumentType = async (file: File): Promise<{ documentType: s
 };
 
 
-export const generatePurchasePurpose = async (items: { name: string, quantity: number }[]): Promise<string> => {
+export const generatePurchasePurpose = async (items: { name: string, quantity: number }[], requestingDept: string): Promise<string> => {
     const model = 'gemini-2.5-flash';
     const itemsList = items.map(item => `- ${item.quantity} x ${item.name}`).join('\n');
     
     const prompt = `
-        Based on the following list of items from a Purchase Request, generate a concise, one-sentence purpose statement suitable for an official government document. The purpose should be formal and summarize the intended use.
+        Based on the following list of items from a Purchase Request for the **${requestingDept}**, generate a concise, one-sentence purpose statement suitable for an official government document. The purpose should be formal and summarize the intended use for that specific department.
 
         Item List:
         ${itemsList}
 
-        Example Output: "For office supplies and materials for the use of the City Mayor's Office."
-        Example Output: "To procure various IT equipment for the upgrade of the city's network infrastructure."
+        Example Output for City Mayor's Office: "For office supplies and materials for the use of the City Mayor's Office."
+        Example Output for IT Department: "To procure various IT equipment for the upgrade of the city's network infrastructure."
 
         Generated Purpose:
     `;
@@ -783,7 +1058,7 @@ export const auditDocument = async (file: File): Promise<DocumentAuditResult> =>
 
         **Key BAC Personnel for Auditing (Bacolod City, 2025):**
         Use this list to check for correct names, roles, and signatories.
-        *   City Mayor: HON. ALFREDO ABELARDO B. BENITEZ
+        *   City Mayor: HON. GREG G. GASATAYA
         *   BAC Chairperson: ATTY. HERMILO B. PA-OYON
         *   BAC Vice-Chairperson: ATTY. ALLYN LUV Z. DIGNADICE
         *   Head of BAC Secretariat: ATTY. OMAR FRANCIS P. DEMONTEVERDE
@@ -855,6 +1130,65 @@ export const auditDocument = async (file: File): Promise<DocumentAuditResult> =>
     });
 
     return safeParseJsonResponse<DocumentAuditResult>(response.text, 'auditDocument');
+};
+
+export const auditContract = async (file: File): Promise<ContractAuditResult> => {
+    const model = 'gemini-2.5-flash';
+    const base64Data = await fileToBase64(file);
+
+    const prompt = `
+        You are an expert AI legal assistant specializing in Philippine Government Procurement Law, specifically the New Government Procurement Act (R.A. 12009). Your task is to perform a detailed audit of a draft contract document.
+
+        **Core Directives:**
+        1.  **Analyze the Entire Contract:** Read through the provided document, which can be an image, PDF, or text.
+        2.  **Identify Potential Issues:** Scrutinize each clause for potential risks, ambiguities, unfair terms, missing information, compliance issues with R.A. 12009, or internal contradictions.
+        3.  **Categorize Findings:** For each issue found, you must categorize it as one of the following: 'Ambiguity', 'Unfair Term', 'Missing Information', 'Compliance', or 'Contradiction'.
+        4.  **Assess Risk Level:** Assign a risk level ('High', 'Medium', 'Low', 'Info') to each finding. High risk items are those that could lead to legal disputes, disallowances by COA, or significant disadvantages for the government.
+        5.  **Formulate Recommendations:** For each finding, provide a clear, actionable recommendation to mitigate the risk or improve the clause.
+        6.  **Summarize:** Provide a high-level 'overall_assessment' and an 'executive_summary' of the contract's health.
+
+        **CRITICAL: Output Schema**
+        You MUST return a single, clean JSON object. Do not include any text, markdown formatting like \`\`\`json, or any text before or after the JSON object.
+    `;
+
+    const responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+            overall_assessment: { type: Type.STRING, description: "A one-sentence overall assessment of the contract's risk level." },
+            executive_summary: { type: Type.STRING, description: "A concise paragraph summarizing the key findings and overall health of the contract." },
+            findings: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        clause_text: { type: Type.STRING, description: "The exact clause or text from the contract where the issue was found." },
+                        risk_level: { type: Type.STRING, description: "'High', 'Medium', 'Low', or 'Info'." },
+                        category: { type: Type.STRING, description: "'Ambiguity', 'Unfair Term', 'Missing Information', 'Compliance', or 'Contradiction'." },
+                        issue: { type: Type.STRING, description: "A clear and concise description of the identified issue." },
+                        recommendation: { type: Type.STRING, description: "An actionable recommendation to address the issue." }
+                    },
+                    required: ['clause_text', 'risk_level', 'category', 'issue', 'recommendation']
+                }
+            }
+        },
+        required: ['overall_assessment', 'executive_summary', 'findings']
+    };
+
+    const response = await ai.models.generateContent({
+        model,
+        contents: {
+            parts: [
+                { text: prompt },
+                { inlineData: { mimeType: file.type, data: base64Data } }
+            ]
+        },
+        config: {
+            responseMimeType: "application/json",
+            responseSchema: responseSchema,
+        },
+    });
+
+    return safeParseJsonResponse<ContractAuditResult>(response.text, 'auditContract');
 };
 
 export const extractPostDataFromDocuments = async (files: File[]): Promise<SocialMediaPostItem[]> => {
@@ -1214,34 +1548,32 @@ export const extractPpmpData = async (files: File[]): Promise<PpmpItem[]> => {
     const model = 'gemini-2.5-flash';
 
     const prompt = `
-        You are an AI data extractor specializing in Philippine government procurement documents. Your task is to analyze the provided image(s) of a Project Procurement Management Plan (PPMP) and extract all line items into a structured JSON format. The plan contains both category headers and item rows.
+        You are an AI data extractor specializing in Philippine government procurement documents. Your task is to analyze the provided image(s) of a Project Procurement Management Plan (PPMP) and extract all line items into a structured JSON format. The plan contains both category headers (like "Capital Outlay") and specific item rows.
 
-        **Extraction Rules:**
-        1.  **Row-by-Row Analysis:** Process the document and identify each row. For each row, determine if it is a 'category' header or a procurement 'item'.
-        2.  **JSON Object Creation:** Create one JSON object for each row identified.
-        3.  **'isCategory' Flag:**
-            - If the row is a category header (e.g., a bold row without monthly data), set \`isCategory: true\`.
-            - If the row is a procurement item, set \`isCategory: false\`.
-        4.  **Field Mapping (CRITICAL):**
-            - For **Category Rows** (\`isCategory: true\`):
-                - \`description\`: Extract the full category name.
-                - \`amount\`: Extract the total amount for that category if it's on the same row.
-                - All other fields should be empty or null.
-            - For **Item Rows** (\`isCategory: false\`):
-                - \`papCode\`: Extract from the 'PAP Code' column.
-                - \`description\`: Extract the full item description from the 'Project/Activity/Program' column.
-                - \`specificationDetails\`: Extract from the 'Specification Details' column.
-                - \`earlyProcurementActivity\`: Extract from the 'Is this an Early Procurement Activity?' column (should be 'Yes' or 'No').
-                - \`procurementMode\`: Extract from the 'Mode of Procurement' column.
-                - \`quantity\`: Extract from the 'Qty' column.
-                - \`unitCost\`: Extract from the 'Breakdown of Amounts' column.
-                - \`amount\`: Extract from the 'Amount (PhP)/Estimated Budget' column.
-                - \`jan\`, \`feb\`, ... \`dec\`: Extract the monthly quantity values from the 'Expected Implementation' schedule. If a month has a value (like a number), extract it. If it's empty, leave the field empty.
-                - \`remarks\`: Extract any text from the 'Remarks' column. If empty, return an empty string.
-        5.  **Data Cleaning:** Clean the extracted data. Remove currency symbols (like '₱' or 'Php') and grouping commas from all numeric fields. Ensure all extracted values are returned as strings.
+        **Extraction Rules & Field Mapping (CRITICAL):**
+        1.  **Process Row by Row:** Create one JSON object for each row in the document's main table.
+        2.  **Identify Row Type:**
+            - For rows that are category headers (e.g., "Capital Outlay", "Training Expenses"), set \`isCategory: true\`.
+            - For rows that are specific procurement items, set \`isCategory: false\`.
+            - For the final "GRAND TOTAL" row, create a category-style object with \`isCategory: true\` and description "GRAND TOTAL".
+        3.  **Map Columns to JSON Fields:**
+            - **'CODE' or 'PAP Code' column:** Map to \`papCode\`.
+            - **'GENERAL DESCRIPTION' or 'Project/Activity/Program' column:** Map to \`description\`. This is the most important field.
+            - **'Specification Details' column:** Map to \`specificationDetails\`. If this column is not present, this field can be an empty string.
+            - **'Quantity' or 'Qty' column:** This column often contains a number. Extract the number into the \`quantity\` field.
+            - **'Unit of Measurement' or inferred unit:** Extract the unit (e.g., "Cont.", "reams") into the \`uom\` field.
+            - **'Estimated Budget' column:** Map to \`estimatedBudget\`.
+            - **'Mode of Procurement' column:** Map to \`procurementMode\`.
+            - **'SCHEDULE/MILESTONE OF ACTIVITIES' or 'Expected Implementation' (Jan to Dec columns):** Map the value in each month's cell to the corresponding field (\`jan\`, \`feb\`, ..., \`dec\`). If a cell is empty, the field should be an empty string.
+            - **'Price Catalogue' or 'Breakdown of Amounts' column:** Map to \`unitCost\`.
+            - **'TOTAL AMOUNT' or 'Amount Estimated Budget' column:** Map to \`amount\`.
+        4.  **Handling Category Rows:** For rows where \`isCategory: true\`, the primary fields to populate are \`description\` and \`estimatedBudget\` and \`amount\` if they exist on that row. All other fields should be empty strings or null.
+        5.  **Data Cleaning:**
+            - For all numeric fields (\`quantity\`, \`estimatedBudget\`, monthly values, \`unitCost\`, \`amount\`), remove any currency symbols (like '₱' or 'Php') and grouping commas (e.g., "1,000,000.00" becomes "1000000.00").
+            - Ensure all extracted values are returned as strings.
 
         **Output Format:**
-        You must return a single, clean JSON array. Each object in the array represents one row from the plan. Adhere strictly to the provided JSON schema.
+        You MUST return a single, clean JSON array. Each object in the array represents one row from the plan. Adhere strictly to the provided JSON schema. Do not include markdown formatting.
     `;
 
     const responseSchema = {
@@ -1251,13 +1583,12 @@ export const extractPpmpData = async (files: File[]): Promise<PpmpItem[]> => {
             properties: {
                 isCategory: { type: Type.BOOLEAN },
                 description: { type: Type.STRING },
-                amount: { type: Type.STRING },
-                papCode: { type: Type.STRING },
                 specificationDetails: { type: Type.STRING },
-                earlyProcurementActivity: { type: Type.STRING },
-                procurementMode: { type: Type.STRING },
+                papCode: { type: Type.STRING },
                 quantity: { type: Type.STRING },
-                unitCost: { type: Type.STRING },
+                uom: { type: Type.STRING },
+                estimatedBudget: { type: Type.STRING },
+                procurementMode: { type: Type.STRING },
                 jan: { type: Type.STRING },
                 feb: { type: Type.STRING },
                 mar: { type: Type.STRING },
@@ -1270,6 +1601,8 @@ export const extractPpmpData = async (files: File[]): Promise<PpmpItem[]> => {
                 oct: { type: Type.STRING },
                 nov: { type: Type.STRING },
                 dec: { type: Type.STRING },
+                unitCost: { type: Type.STRING },
+                amount: { type: Type.STRING },
                 remarks: { type: Type.STRING }
             },
             required: ['isCategory', 'description']
@@ -1301,32 +1634,31 @@ export const extractDetailedPpmpData = async (file: File): Promise<PpmpProjectIt
     const model = 'gemini-2.5-flash';
     
     const prompt = `
-        You are an expert AI data extractor for Philippine government procurement. Your task is to analyze a Project Procurement Management Plan (PPMP) document and extract every line item into a structured JSON format.
+        You are an expert AI data extractor for Philippine government procurement, specializing in Project Procurement Management Plans (PPMP) based on GPPB and COA guidelines. Your task is to analyze the provided PPMP document and extract every single line item into a structured JSON format. Do not summarize or aggregate items.
 
         **Instructions:**
-        1.  **Process the Document:** Scan the provided PPMP image.
-        2.  **Identify Project Rows:** Identify every row that represents a distinct procurement project or item. Ignore category headers or summary rows.
-        3.  **Extract Core Data for Each Row:** For each project row, meticulously extract the data corresponding to the following official PPMP columns. Be precise.
-            - \`generalDescription\`: From "General Description and Objective of the Project to be Procured".
-            - \`projectType\`: From "Type of the Project to be Procured". Should be one of "Goods", "Infrastructure", or "Consulting Services".
-            - \`quantitySize\`: From "Quantity and Size of the Project to be Procured".
-            - \`procurementMode\`: From "Recommended Mode of Procurement".
-            - \`preProcCon\`: From "Pre-Procurement Conference, if applicable". Must be "Yes" or "No".
-            - \`procurementStart\`: From "Start of Procurement Activity". E.g., "Jan", "1st Quarter".
-            - \`procurementEnd\`: From "End of Procurement Activity". E.g., "Feb", "1st Quarter".
-            - \`deliveryImplementation\`: From "Expected Delivery/Implementation Period".
-            - \`sourceOfFunds\`: From "Source of Funds".
-            - \`estimatedBudget\`: From "Estimated Budget / Authorized Budgetary Allocation (PhP)". This MUST be a number. Remove currency symbols and commas.
-            - \`supportingDocuments\`: From "Attached Supporting Documents".
-            - \`remarks\`: From "Remarks".
-        4.  **Extract and Calculate Monthly Budget Schedule:**
-            - Locate the monthly scheduling grid, which typically shows procurement **quantities** for each month (Jan to Dec).
-            - Sum these monthly quantities to get a total quantity for the year.
-            - If the total quantity is greater than zero, calculate the unit cost: \`unitCost = estimatedBudget / totalQuantity\`.
-            - For each month, calculate the budget for that month: \`monthlyBudget = monthlyQuantity * unitCost\`. Round to two decimal places.
-            - If the schedule grid is empty or not present for an item, distribute the \`estimatedBudget\` evenly across the months between \`procurementStart\` and \`procurementEnd\`. If these are quarters, distribute evenly among the months in those quarters. If they are just single months, put the full budget in the start month.
-            - The sum of all monthly budgets in the \`schedule\` object MUST equal the total \`estimatedBudget\`.
-            - Create a \`schedule\` object with numeric budget values for \`jan\`, \`feb\`, \`mar\`, \`apr\`, \`may\`, \`jun\`, \`jul\`, \`aug\`, \`sep\`, \`oct\`, \`nov\`, \`dec\`.
+        1.  **Process Line by Line:** Scan the document and identify every row that represents a distinct procurement project or item. Ignore category headers (e.g., "MOOE", "Capital Outlay") or summary/total rows. Create one JSON object for each individual item.
+        2.  **Extract Core Data for Each Item:** For each project row, meticulously extract the data for the following fields. Be precise.
+            - \`generalDescription\`: From the "General Description" or "Procurement Project" column. This should be the full item name.
+            - \`specificationDetails\`: Extract any detailed specifications for the item. If not in a separate column, this might be part of the general description. If none, leave empty.
+            - \`quantity\`: The numerical quantity of the item.
+            - \`uom\`: The Unit of Measure for the item (e.g., 'pcs', 'unit', 'lot', 'reams').
+            - \`procurementMode\`: From the "Recommended Mode of Procurement" column.
+            - \`preProcCon\`: From the "Pre-Procurement Conference, if applicable" column. Must be "Yes", "No", or empty.
+            - \`procurementStart\`: From the "Start of Procurement Activity" or similar schedule columns (e.g., "1st Quarter", "Jan").
+            - \`procurementEnd\`: From the "End of Procurement Activity" or similar schedule columns (e.g., "1st Quarter", "Mar").
+            - \`deliveryImplementation\`: From the "Expected Delivery/Implementation Period" column.
+            - \`sourceOfFunds\`: From the "Source of Funds" column.
+            - \`estimatedBudget\`: From the "Estimated Budget" or "Authorized Budgetary Allocation (PhP)" column. This MUST be a number. Remove currency symbols and commas.
+            - \`remarks\`: From the "Remarks" column.
+        3.  **Calculate Monthly Budget Schedule:**
+            - Locate the monthly scheduling grid (Jan to Dec). This grid often shows **quantities**, not budget amounts.
+            - Sum the monthly quantities to get the total annual quantity.
+            - If the total annual quantity from the schedule is greater than zero, calculate the unit cost: \`unitCost = estimatedBudget / totalAnnualQuantity\`.
+            - For each month, calculate the budget: \`monthlyBudget = monthlyQuantity * unitCost\`.
+            - If the schedule grid shows budget amounts directly, use those values.
+            - If the schedule grid is empty, distribute the \`estimatedBudget\` evenly across the months within the \`procurementStart\` and \`procurementEnd\` period.
+            - The final \`schedule\` object must contain numeric budget values for all 12 months (jan, feb, etc.). The sum of these values MUST equal the total \`estimatedBudget\`.
 
         **CRITICAL: Output Format**
         You MUST return a single, clean JSON array of objects. Each object represents one project row from the document. Do not include any text or markdown formatting.
@@ -1338,16 +1670,16 @@ export const extractDetailedPpmpData = async (file: File): Promise<PpmpProjectIt
             type: Type.OBJECT,
             properties: {
                 generalDescription: { type: Type.STRING },
-                projectType: { type: Type.STRING },
-                quantitySize: { type: Type.STRING },
+                specificationDetails: { type: Type.STRING },
+                quantity: { type: Type.NUMBER },
+                uom: { type: Type.STRING },
                 procurementMode: { type: Type.STRING },
-                preProcCon: { type: Type.STRING, description: "Should be 'Yes' or 'No'" },
+                preProcCon: { type: Type.STRING, description: "Should be 'Yes', 'No', or empty" },
                 procurementStart: { type: Type.STRING },
                 procurementEnd: { type: Type.STRING },
                 deliveryImplementation: { type: Type.STRING },
                 sourceOfFunds: { type: Type.STRING },
                 estimatedBudget: { type: Type.NUMBER },
-                supportingDocuments: { type: Type.STRING },
                 remarks: { type: Type.STRING },
                 schedule: {
                     type: Type.OBJECT,
@@ -1360,7 +1692,7 @@ export const extractDetailedPpmpData = async (file: File): Promise<PpmpProjectIt
                     required: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
                 }
             },
-            required: ['generalDescription', 'estimatedBudget', 'schedule'],
+            required: ['generalDescription', 'quantity', 'uom', 'estimatedBudget', 'schedule'],
         },
     };
     
@@ -1387,7 +1719,7 @@ export const extractDetailedPpmpData = async (file: File): Promise<PpmpProjectIt
     return parsedData.map((item, index) => ({
         ...item,
         id: Date.now() + index,
-        office: file.name.split('.')[0].replace(/_/g, ' ') || "Extracted",
+        office: file.name.split('.')[0].replace(/_/g, ' ').replace(/\s+/g, ' ').trim() || "Extracted",
     }));
 };
 
@@ -1573,21 +1905,11 @@ export const comparePrToCatalog = async (prFile: File): Promise<CatalogCompariso
     const extractedPrData = await extractPrForCatalogComparison(prFile);
     
     // Step 2: Prepare the catalog data and the extracted PR data for the AI.
-    const allCatalogItems = Object.values(marketData).flat().flatMap(item => {
-        if ('variants' in item) { // It's a VariantMarketItem
-            return item.variants.map(variant => ({
-                name: `${item.name} (${variant.description})`,
-                description: item.baseDescription,
-                unitCost: variant.price
-            }));
-        } else { // It's a MarketItem
-            return [{
-                name: item.name,
-                description: item.description,
-                unitCost: item.price
-            }];
-        }
-    });
+    const allCatalogItems = Object.values(marketData).flat().map(item => ({
+        name: item.name,
+        description: item.description,
+        unitCost: item.price
+    }));
 
     const prompt = `
         You are a meticulous procurement auditor AI. Your task is to compare items from a Purchase Request (PR) against a master Procurement Catalog.
@@ -1662,21 +1984,11 @@ export const processDocumentForCatalogAssistant = async (docFile: File): Promise
     const model = 'gemini-2.5-flash';
     const base64Data = await fileToBase64(docFile);
 
-    const allCatalogItems = Object.values(marketData).flat().flatMap(item => {
-        if ('variants' in item) {
-            return item.variants.map(variant => ({
-                name: `${item.name} (${variant.description})`,
-                uacsCode: item.uacsCode,
-                unitCost: variant.price
-            }));
-        } else {
-            return [{
-                name: item.name,
-                uacsCode: item.uacsCode,
-                unitCost: item.price
-            }];
-        }
-    });
+    const allCatalogItems = Object.values(marketData).flat().map(item => ({
+        name: item.name,
+        uacsCode: item.uacsCode,
+        unitCost: item.price
+    }));
 
     const categoriesList = marketCategories.join(', ');
 
@@ -1809,7 +2121,7 @@ export const analyzePpmpForImprovements = async (items: PpmpItem[]): Promise<Ppm
         \`\`\`
 
         **Your Tasks:**
-        1.  **Write an Executive Summary:** In 2-3 sentences, provide a high-level overview of the procurement plan based on the items. Mention the general scope and types of items.
+        1.  **Write an Executive Summary:** In 2-3 sentences, provide a high-level overview of the procurement plan based on the items.
         2.  **Analyze for Key Findings:** Meticulously review each item against the rules above. Create a list of findings. For each finding:
             *   **findingType:** Classify the issue as 'Missing Data', 'Compliance Mismatch', 'Vague Description', 'Scheduling Gap', or 'General Suggestion'.
             *   **itemDescription:** State the full original description of the item the finding applies to.
@@ -1853,4 +2165,43 @@ export const analyzePpmpForImprovements = async (items: PpmpItem[]): Promise<Ppm
     });
     
     return safeParseJsonResponse<PpmpAnalysisResult>(response.text, 'analyzePpmpForImprovements');
+};
+
+export const scrapeFacebookFeed = async (pageUrl: string): Promise<ScrapedFacebookPost[]> => {
+    const model = 'gemini-2.5-flash';
+    const prompt = `
+        You are an expert web scraping AI. Your task is to visit the provided Facebook page URL, find the three (3) most recent posts, and extract specific information from them.
+
+        **Facebook Page URL:** ${pageUrl}
+
+        **Instructions:**
+        1.  Use Google Search to access the public content of the Facebook page.
+        2.  Identify the three most recent posts on the timeline.
+        3.  For each of these three posts, extract the following:
+            *   **text:** The full text content of the post. If the text is very long, summarize it concisely in one or two sentences, but capture the main point.
+            *   **date:** The relative timestamp of the post (e.g., "2 hours ago", "Yesterday at 5:30 PM").
+            *   **link:** A direct, permanent link to that specific post if available. If not, use the main page URL: "${pageUrl}".
+        4.  Return the data as a clean JSON array of objects.
+
+        **CRITICAL: Output Format**
+        - You MUST return ONLY a single, clean JSON array of objects.
+        - Do not include any explanations, conversational text, markdown formatting like \`\`\`json, or any text before or after the JSON array.
+        - The JSON array must contain exactly three objects. If you can't find three posts, create placeholder objects.
+        - The entire response must be the JSON array itself, following this structure EXACTLY:
+          [
+            { "text": "Content of the most recent post...", "date": "1 hour ago", "link": "https://facebook.com/..." },
+            { "text": "Content of the second post...", "date": "Yesterday", "link": "https://facebook.com/..." },
+            { "text": "Content of the third post...", "date": "2 days ago", "link": "https://facebook.com/..." }
+          ]
+    `;
+
+    const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+            tools: [{ googleSearch: {} }],
+        },
+    });
+
+    return safeParseJsonResponse<ScrapedFacebookPost[]>(response.text, 'scrapeFacebookFeed');
 };

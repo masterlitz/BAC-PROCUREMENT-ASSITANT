@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_824: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_824: MarketItem = {
     name: "HAND HELD RADIO", 
     description: "A professional two-way handheld radio (walkie-talkie) for reliable communication over short to medium distances. Features multiple channels and a durable design.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705040-00", 
     quantity: 100, 
     unit: "PCS", 
     price: 3102.30, 

@@ -1,6 +1,7 @@
-import { MarketItem } from '../../../types';
 
-export const prItems: MarketItem[] = [
+import { MarketItem, VariantMarketItem } from '../../../types';
+
+export const prItems: (MarketItem | VariantMarketItem)[] = [
     {
         id: 83001,
         name: "Tire Clamping for Truck (Heavy Duty)",
@@ -56,5 +57,86 @@ export const prItems: MarketItem[] = [
         itemCode: "RMT-SIREN-SPKR",
         technicalSpecifications: "Power Output: 100-200 Watts\nFunctions: Siren tones (wail, yelp, hi-lo), PA system with microphone\nIncludes: Amplifier, speaker horn, microphone.",
         imageUrl: "https://i.ibb.co/8DBVscY/siren-horn.png"
-    }
+    },
+    { 
+        id: 11006, 
+        name: "Cross Joint for Light Duty Truck", 
+        description: "A universal joint (U-joint, cross joint) is a critical component of the vehicle's driveshaft. It allows the driveshaft to transmit power at an angle as the suspension moves up and down. This specific cross joint is suitable for light duty trucks (e.g. Isuzu SGK990 model), ensuring reliable torque transfer and smooth operation of the driveline.", 
+        category: "Repair & Maintenance - Transportation Equipment", 
+        uacsCode: "50213040-00", 
+        quantity: 100, 
+        unit: "PIECE", 
+        price: 2350.00, 
+        referenceLinks: [],
+        itemCode: "RMT-CJT-001",
+        technicalSpecifications: "Type: Cross Joint / Universal Joint\nApplication: Driveshaft / Propeller Shaft\nFeatures: Includes grease fitting (zerk), circlips/snap rings\nMaterial: High-strength forged steel with precision-ground bearing caps\nCompatibility: Isuzu Manlift Truck (SGK990) and similar commercial vehicles. Dimensions must be verified.",
+        imageUrl: "https://i.ibb.co/L9d8b02/cross-joint.png"
+    },
+    {
+        id: 11007,
+        name: "Battery 12V, 11-Plates (for Toyota Hilux)",
+        description: "Standard automotive 12-volt, 11-plate battery suitable for light-duty trucks like the Toyota Hilux.",
+        category: "Repair & Maintenance - Transportation Equipment",
+        uacsCode: "50213060-00",
+        quantity: 100, unit: "piece", price: 10800.00, referenceLinks: []
+    },
+    {
+        id: 11008,
+        name: "Hub Bolts (for Isuzu DT 3)",
+        description: "Set of hub bolts for securing wheels on an Isuzu DT 3 truck.",
+        category: "Repair & Maintenance - Transportation Equipment",
+        uacsCode: "50213060-00",
+        quantity: 100, unit: "piece", price: 1100.00, referenceLinks: []
+    },
+    {
+        id: 11009,
+        isVariant: true,
+        name: "Aircon Expansion Valve",
+        baseDescription: "Automotive air conditioning thermal expansion valve. Regulates refrigerant flow into the evaporator.",
+        category: "Repair & Maintenance - Transportation Equipment",
+        uacsCode: "50213060-00",
+        variants: [
+            { itemCode: "RMT-AC-EXVALVE-HINO", description: "for Hino Manlift Truck (JOC 636)", price: 1680.00, unit: "pc", stockStatus: "Available" },
+            { itemCode: "RMT-AC-EXVALVE-MIT", description: "for Mitsubishi L300", price: 1792.00, unit: "pc", stockStatus: "Available" },
+            { itemCode: "RMT-AC-EXVALVE-JMC", description: "for JMC Van/Double Cab", price: 840.00, unit: "pc", stockStatus: "Available" },
+        ]
+    },
+    {
+        id: 11010,
+        isVariant: true,
+        name: "Aircon Drier / Receiver",
+        baseDescription: "Automotive air conditioning receiver/drier. Removes moisture from the refrigerant.",
+        category: "Repair & Maintenance - Transportation Equipment",
+        uacsCode: "50213060-00",
+        variants: [
+            { itemCode: "RMT-AC-DRIER-HINO", description: "for Hino Manlift Truck", price: 840.00, unit: "pc", stockStatus: "Available" },
+            { itemCode: "RMT-AC-DRIER-MIT", description: "for Mitsubishi L300", price: 504.00, unit: "pc", stockStatus: "Available" },
+            { itemCode: "RMT-AC-DRIER-JMC", description: "for JMC Van/Double Cab", price: 245.00, unit: "pc", stockStatus: "Available" },
+        ]
+    },
+    { id: 11011, name: "Passenger Side Glass Window (for Hino Dutro)", description: "Replacement crystal passenger side glass window for Hino Dutro / Dyna 300 series.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "assy", price: 6500.00, referenceLinks: [] },
+    { id: 11012, name: "Ball Joint Set (Upper & Lower) for Mitsubishi L300", description: "Complete set of upper and lower ball joints for Mitsubishi L300 suspension.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "set", price: 4840.00, referenceLinks: [] },
+    { id: 11013, name: "Alternator Belt", description: "Replacement alternator belt for various vehicles.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 970.00, referenceLinks: [] },
+    { id: 11014, name: "Hydraulic Jack, 10 Tons", description: "10-ton capacity hydraulic bottle jack for lifting heavy vehicles and equipment.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 3920.00, referenceLinks: [] },
+    { id: 11015, name: "Aircon Compressor 508", description: "Replacement air conditioning compressor, model 508, for various vehicles.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 4760.00, referenceLinks: [] },
+    { id: 11016, name: "Cabin Filter", description: "Replacement cabin air filter to ensure clean air inside the vehicle.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 1092.00, referenceLinks: [] },
+    { id: 11017, name: "Power Steering Belt", description: "Replacement power steering belt for Mitsubishi L300.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 940.00, referenceLinks: [] },
+    { id: 11018, name: "Aircon Belt", description: "Replacement aircon belt for Mitsubishi L300.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 952.00, referenceLinks: [] },
+    { id: 11019, name: "Center Post Assembly", description: "Replacement center post assembly for Mitsubishi L300.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 2310.00, referenceLinks: [] },
+    { id: 11020, name: "Bell Crank Assembly", description: "Replacement bell crank assembly for Mitsubishi L300.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 3570.00, referenceLinks: [] },
+    { id: 11021, name: "Idler Arm Assembly", description: "Replacement idler arm assembly for Mitsubishi L300.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 4550.00, referenceLinks: [] },
+    { id: 11022, name: "Condenser Fan", description: "Replacement condenser fan for Mitsubishi L300.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 749.00, referenceLinks: [] },
+    { id: 11023, name: "Fuel Tank Cap", description: "Replacement fuel tank cap for JMC Dropside Truck.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 1330.00, referenceLinks: [] },
+    { id: 11024, name: "Air Cleaner (as per sample)", description: "Replacement air cleaner element for JMC Dropside Truck.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 2632.00, referenceLinks: [] },
+    { id: 11025, name: "Ball Bearing (General)", description: "General purpose ball bearing for vehicle repair.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 100, unit: "pc", price: 1680.00, referenceLinks: [] },
+    { id: 99031, name: "Tire 265/65/17R", description: "All-terrain tire for SUVs and light trucks.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 30, unit: "pcs", price: 10640.00, referenceLinks: [] },
+    { id: 99032, name: "Tire 185/70/R14C", description: "Commercial light truck tire.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 12, unit: "pcs", price: 5225.00, referenceLinks: [] },
+    { id: 99033, name: "Tire 205/70/R15", description: "Passenger car or SUV tire.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 4, unit: "pcs", price: 6664.00, referenceLinks: [] },
+    { id: 99034, name: "Motorcycle Front Tire 100/80/17", description: "Front tire for motorcycles.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 8, unit: "pcs", price: 6272.00, referenceLinks: [] },
+    { id: 99035, name: "Motorcycle Rear Tire 120/70/17", description: "Rear tire for motorcycles.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 8, unit: "pcs", price: 9800.00, referenceLinks: [] },
+    { id: 99036, name: "Motorcycle Battery 12V/10AH", description: "10 Amp-hour, 12-volt battery for motorcycles.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 8, unit: "pcs", price: 2352.00, referenceLinks: [] },
+    { id: 99037, name: "Motorcycle Battery 12V/8AH", description: "8 Amp-hour, 12-volt battery for motorcycles.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 2, unit: "pcs", price: 3332.00, referenceLinks: [] },
+    { id: 99038, name: "Motorcycle Battery 7S", description: "7S type battery for motorcycles.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 7, unit: "pcs", price: 2940.00, referenceLinks: [] },
+    { id: 99039, name: "Battery 11 Plates", description: "11-plate automotive battery.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 4, unit: "pcs", price: 9856.00, referenceLinks: [] },
+    { id: 99040, name: "Tire Steel Rim 14\"", description: "14-inch steel rim for vehicle tires.", category: "Repair & Maintenance - Transportation Equipment", uacsCode: "50213060-00", quantity: 2, unit: "pcs", price: 4900.00, referenceLinks: [] }
 ];

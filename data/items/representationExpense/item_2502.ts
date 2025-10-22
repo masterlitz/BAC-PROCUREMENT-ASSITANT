@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_2502: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_2502: MarketItem = {
     name: "Pack Lunch", 
     description: "Packed lunch meals for distribution during field activities, seminars, or other government events where a formal dining setup is not available.", 
     category: "Representation Expense", 
-    uacsCode: "50211030-00", 
+    uacsCode: "50299030-00", 
     quantity: 1000,
     unit: "pax", 
     price: 250, 

@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_2504: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_2504: MarketItem = {
     name: "Snacks", 
     description: "Provision of snacks and refreshments for official meetings, trainings, or events, catered for a specified number of participants (pax).", 
     category: "Representation Expense", 
-    uacsCode: "50211030-00", 
+    uacsCode: "50299030-00", 
     quantity: 1000,
     unit: "pax", 
     price: 175, 

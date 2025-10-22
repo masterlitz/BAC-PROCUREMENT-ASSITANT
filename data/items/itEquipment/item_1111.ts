@@ -1,11 +1,12 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_1111: MarketItem = { 
     id: 1111, 
-    name: "NOTEBOOK 1515-57-53QL CORE 5-1235U 8GB MEM 512GB S", 
+    name: "15.6-inch Laptop (Core i5)", 
     description: "A 15.6-inch laptop powered by an Intel Core i5 processor, with 8GB of RAM and a fast 512GB solid-state drive, suitable for demanding office applications.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705030-00", 
     quantity: 40, 
     unit: "UNITS", 
     price: 55346.85, 

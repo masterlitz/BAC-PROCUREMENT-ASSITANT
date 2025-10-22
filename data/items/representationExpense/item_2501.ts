@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_2501: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_2501: MarketItem = {
     name: "Meals with Venue", 
     description: "Catering service for meals (e.g., lunch, dinner) including venue rental for official government functions, meetings, or trainings.", 
     category: "Representation Expense", 
-    uacsCode: "50211030-00", 
+    uacsCode: "50299030-00", 
     quantity: 1000,
     unit: "pax", 
     price: 650, 

@@ -1,0 +1,121 @@
+import { MarketItem } from '../../../types';
+
+export const prItems: MarketItem[] = [
+    {
+        id: 99004,
+        name: "Cono Carpus (Height - 1 meter)",
+        description: "Cono Carpus plant, approximately 1 meter in height. Suitable for landscaping and greening projects.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 95,
+        unit: "pc",
+        price: 625.00,
+        referenceLinks: [],
+        itemCode: "AGRI-PLANT-CONO-1M",
+        imageUrl: "https://i.ibb.co/y6Kz1qj/cono-carpus.png"
+    },
+    {
+        id: 99005,
+        name: "Carabao Grass",
+        description: "Carabao grass for lawn and landscaping purposes, sold per square foot.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 8150,
+        unit: "sq. ft.",
+        price: 6.25,
+        referenceLinks: [],
+        itemCode: "AGRI-GRASS-CARABAO",
+        imageUrl: "https://i.ibb.co/Xz9tG1w/carabao-grass.png"
+    },
+    {
+        id: 99006,
+        name: "Red Banaba (Height - 10 to 15 ft.)",
+        description: "Red Banaba tree sapling, with a height of 10 to 15 feet. Known for its vibrant flowers.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 8,
+        unit: "pc",
+        price: 1875.00,
+        referenceLinks: [],
+        itemCode: "AGRI-TREE-REDBANABA",
+        imageUrl: "https://i.ibb.co/h1gYyBq/red-banaba.png"
+    },
+    {
+        id: 99007,
+        name: "Balay Lamok (Height-10 to 15 ft.)",
+        description: "Balay Lamok tree sapling, with a height of 10 to 15 feet. A native tree species.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 8,
+        unit: "pc",
+        price: 1875.00,
+        referenceLinks: [],
+        itemCode: "AGRI-TREE-BALAYLAMOK",
+        imageUrl: "https://i.ibb.co/Cbf3Nms/balay-lamok.png"
+    },
+    {
+        id: 99008,
+        name: "Tabebuia Rosea Tree (Height-10 to 15 ft.)",
+        description: "Tabebuia Rosea (Rosy Trumpet Tree) sapling, 10 to 15 feet in height, known for its pink flowers.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 8,
+        unit: "pc",
+        price: 2500.00,
+        referenceLinks: [],
+        itemCode: "AGRI-TREE-TABEBUIA",
+        imageUrl: "https://i.ibb.co/sKkXWjK/tabebuia-rosea.png"
+    },
+    {
+        id: 99009,
+        name: "Golden Shower (Height-10 to 15 ft.)",
+        description: "Golden Shower tree sapling, 10 to 15 feet tall, famous for its cascading yellow flowers.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 8,
+        unit: "pc",
+        price: 2500.00,
+        referenceLinks: [],
+        itemCode: "AGRI-TREE-GLDNSHWR",
+        imageUrl: "https://i.ibb.co/BqM8hZ2/golden-shower.png"
+    },
+    {
+        id: 99010,
+        name: "Palawan Cherry Blossom",
+        description: "Palawan Cherry Blossom tree sapling, a popular ornamental tree.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 8,
+        unit: "pc",
+        price: 3125.00,
+        referenceLinks: [],
+        itemCode: "AGRI-TREE-PALAWAN",
+        imageUrl: "https://i.ibb.co/k2v2N22/palawan-cherry.png"
+    },
+    {
+        id: 99011,
+        name: "Liquid Fertilizer",
+        description: "General purpose liquid fertilizer for plants and trees.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 7,
+        unit: "liter",
+        price: 1500.00,
+        referenceLinks: [],
+        itemCode: "AGRI-FERT-LIQUID",
+        imageUrl: "https://i.ibb.co/C2G3hYm/liquid-fertilizer.png"
+    },
+    {
+        id: 99012,
+        name: "Pellets (for Agriculture)",
+        description: "Agricultural pellets, likely for feed or fertilizer.",
+        category: "Agricultural Supplies",
+        uacsCode: "50203110-00",
+        quantity: 50,
+        unit: "unit", 
+        price: 2300.00,
+        referenceLinks: [],
+        itemCode: "AGRI-PELLETS-GEN",
+        imageUrl: "https://i.ibb.co/F8W2Zz1/pellets.png"
+    }
+];

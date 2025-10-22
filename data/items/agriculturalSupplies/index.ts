@@ -1,4 +1,7 @@
-import { MarketItem } from '../../../types';
 
-// The item_62.ts file is empty, so it's not imported.
-export const agriculturalSupplies: MarketItem[] = [];
+import { MarketItem } from '../../../types';
+import { prItems } from './pr_items';
+
+export const agriculturalSupplies: MarketItem[] = [
+    ...prItems,
+];

@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_2503: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_2503: MarketItem = {
     name: "Catering", 
     description: "Catering service for official functions and events, excluding venue rental. Provides food and beverage service for a specified number of guests.", 
     category: "Representation Expense", 
-    uacsCode: "50211030-00", 
+    uacsCode: "50299030-00", 
     quantity: 1000,
     unit: "pax", 
     price: 500, 

@@ -1,6 +1,108 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { userService } from '../../auth/userService';
 import { User } from '../../types';
+import { QRCodeCanvas } from 'qrcode.react';
+import { bacolodCityLogo, orangeBacolodLogo } from '../../data/logo';
+
+declare global {
+    interface Window {
+        jspdf: { 
+            jsPDF: new (options?: any) => any;
+            plugin: any;
+        };
+    }
+}
+interface jsPDFWithAutoTable extends InstanceType<typeof window.jspdf.jsPDF> {
+  autoTable: (options: any) => jsPDFWithAutoTable;
+}
+
+// --- Reusable Digital ID Card Component (scoped to this file) ---
+const DigitalIdCard: React.FC<{ user: User }> = ({ user }) => {
+    const qrValue = "https://bit.ly/bacbcdPA";
+
+    return (
+        <div className="w-full max-w-sm mx-auto rounded-xl overflow-hidden shadow-lg bg-slate-50 font-sans relative" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <div className="absolute inset-x-0 bottom-20 top-20 flex items-center justify-center pointer-events-none z-0">
+                <img
+                    src={orangeBacolodLogo}
+                    alt="Watermark"
+                    className="w-48 h-48 opacity-5"
+                />
+            </div>
+            <div className="relative z-10">
+                <div className="bg-gradient-to-r from-blue-800 to-orange-500 h-20 p-3 flex justify-between items-start">
+                    <img src={bacolodCityLogo} alt="Bacolod City Seal" className="h-14 w-14" />
+                    <div className="text-right">
+                        <p className="text-white font-bold text-base leading-tight">BACOLOD CITY</p>
+                        <p className="text-white text-[10px]">OFFICE OF THE CITY MAYOR</p>
+                    </div>
+                </div>
+                <div className="p-2 pt-0 text-center -mt-10">
+                    <div className="w-20 h-20 rounded-full border-4 border-white inline-block overflow-hidden bg-gray-200">
+                        <img src="https://static.vecteezy.com/system/resources/previews/036/280/651/non_2x/default-avatar-profile-icon-social-media-user-image-gray-avatar-icon-blank-profile-silhouette-illustration-vector.jpg" alt="User" className="w-full h-full object-cover" />
+                    </div>
+                    <h2 className="text-base font-bold text-gray-800 mt-1 truncate" title={user.fullName}>{user.fullName}</h2>
+                    <p className="text-xs text-gray-500 truncate" title={user.department}>{user.department}</p>
+                    <p className="text-[10px] text-gray-600 mt-0.5 break-all">{user.username}</p>
+                </div>
+                <div className="px-3 pb-3 flex justify-between items-center">
+                    <div className="text-left">
+                        <p className="text-[9px] text-gray-400">ID NUMBER</p>
+                        <p className="font-mono text-xs text-gray-800">{`BAC-${String(user.id).padStart(5, '0')}`}</p>
+                        <p className="text-[9px] text-gray-400 mt-1">VALID UNTIL</p>
+                        <p className="font-mono text-xs text-gray-800">12/31/2026</p>
+                    </div>
+                    <div className="text-center">
+                        <div className="p-1 bg-white border rounded-md inline-block">
+                            <QRCodeCanvas value={qrValue} size={60} level={"H"} />
+                        </div>
+                        <p className="text-[8px] font-mono mt-0.5 text-gray-600 break-all">bit.ly/bacbcdPA</p>
+                    </div>
+                </div>
+                 <div className="bg-gray-100 p-1">
+                     <svg className="w-full h-8"
+                         dangerouslySetInnerHTML={{
+                            __html: `<rect x="0" y="0" width="100%" height="100%" fill="none" /><g fill="#333">${Array.from({length: 30}).map((_, i) => `<rect x="${2 + i * 8}" y="5" width="${1 + Math.random() * 2}" height="20" />`).join('')}</g>`
+                        }}
+                    />
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const BulkIdGeneratorModal: React.FC<{ users: User[]; onClose: () => void }> = ({ users, onClose }) => {
+    const handlePrint = () => {
+        document.body.classList.add('is-printing-bulk-ids');
+        window.print();
+        document.body.classList.remove('is-printing-bulk-ids');
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/60 z-[51] flex items-center justify-center p-4" id="bulk-id-printable-area-container">
+            <div className="bg-white rounded-lg shadow-2xl w-full h-full flex flex-col">
+                <header className="p-3 bg-gray-100 border-b flex justify-between items-center flex-shrink-0 no-print">
+                    <h3 className="font-bold text-lg text-gray-800">Bulk Digital ID Generation ({users.length} Users)</h3>
+                    <div className="flex gap-2">
+                        <button onClick={handlePrint} className="btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Print / Export PDF</button>
+                        <button onClick={onClose} className="btn bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Close</button>
+                    </div>
+                </header>
+                <main className="flex-grow overflow-y-auto p-4 bg-gray-200">
+                    <p className="text-center text-sm text-gray-600 mb-4 no-print">To save as PDF, choose 'Save as PDF' as the destination in your browser's print dialog.</p>
+                    <div className="print-grid">
+                        {users.map(user => (
+                            <div key={user.id} className="break-inside-avoid">
+                                <DigitalIdCard user={user} />
+                            </div>
+                        ))}
+                    </div>
+                </main>
+            </div>
+        </div>
+    );
+};
+
 
 const UserManagementTab: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -10,6 +112,8 @@ const UserManagementTab: React.FC = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'success'>('idle');
+    const [isBulkIdModalVisible, setIsBulkIdModalVisible] = useState(false);
+
 
     useEffect(() => {
         setUsers(userService.getUsers());
@@ -50,6 +154,40 @@ const UserManagementTab: React.FC = () => {
         setNewPassword('');
         setConfirmPassword('');
         setError('');
+    };
+    
+    const handleExportPdf = () => {
+        if (!window.jspdf || !window.jspdf.jsPDF) {
+            alert('PDF generation library not loaded.');
+            return;
+        }
+        
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF() as jsPDFWithAutoTable;
+
+        doc.setFontSize(18);
+        doc.text('User Management Report', 14, 22);
+        doc.setFontSize(10);
+        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 14, 30);
+
+        const tableColumn = ["ID", "Username", "Full Name", "Department", "Role"];
+        const tableRows = users.map(user => [
+            user.id,
+            user.username,
+            user.fullName,
+            user.department,
+            user.role
+        ]);
+
+        doc.autoTable({
+            startY: 40,
+            head: [tableColumn],
+            body: tableRows,
+            theme: 'striped',
+            headStyles: { fillColor: [249, 115, 22] }
+        });
+
+        doc.save('user_management_report.pdf');
     };
 
     return (
@@ -105,7 +243,19 @@ const UserManagementTab: React.FC = () => {
                     </tbody>
                 </table>
             </div>
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6 flex justify-end gap-2 flex-wrap">
+                <button
+                    onClick={() => setIsBulkIdModalVisible(true)}
+                    className="btn bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                >
+                    Generate All Digital IDs
+                </button>
+                 <button
+                    onClick={handleExportPdf}
+                    className="btn bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg text-sm"
+                >
+                    Export as PDF
+                </button>
                 <button
                     onClick={handleSave}
                     disabled={saveStatus !== 'idle'}
@@ -138,6 +288,8 @@ const UserManagementTab: React.FC = () => {
                     </div>
                 </div>
             )}
+            
+            {isBulkIdModalVisible && <BulkIdGeneratorModal users={users} onClose={() => setIsBulkIdModalVisible(false)} />}
         </div>
     );
 };

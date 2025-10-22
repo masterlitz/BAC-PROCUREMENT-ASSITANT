@@ -1,11 +1,12 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_30: MarketItem = { 
     id: 30, 
-    name: "3in1 Brother printer", 
+    name: "3-in-1 Multifunction Printer (Wireless)", 
     description: "A Brother multi-function center offering print, scan, and copy functionalities with wireless connectivity for office environments.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705020-00", 
     quantity: 50, 
     unit: "PCS", 
     price: 15891.75, 

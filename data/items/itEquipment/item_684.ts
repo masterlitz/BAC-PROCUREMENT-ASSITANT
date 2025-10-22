@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_684: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_684: MarketItem = {
     name: "Fingerprint Biometric Scanner Time Attendance machine", 
     description: "A standalone biometric device for time and attendance tracking. Uses fingerprint recognition for accurate employee check-in and check-out.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705020-00", 
     quantity: 20, 
     unit: "unit", 
     price: 19799.55, 

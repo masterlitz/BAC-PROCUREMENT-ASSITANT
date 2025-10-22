@@ -1,3 +1,9 @@
+
+
+
+
+
+
 import React, { useState, useRef, useMemo } from 'react';
 import { ProcurementProjectData, SupplierBid, ProcurementProjectItem, DocumentType } from '../../types';
 import { analyzeDocumentForGenerator, generateSupplierQuote } from '../../services/geminiService';
@@ -137,6 +143,10 @@ const initialProjectData: ProcurementProjectData = {
     isApproved: true,
     noaDate: "July 8, 2025",
     performanceSecurity: "five percent (5%)",
+    ntpDate: "July 11, 2025",
+    contractDate: "July 10, 2025",
+    contractVenue: "Bacolod City Government Center, Bacolod City",
+    witnesses: ["ATTY. KAROL JOSEPH P. CHIU", "JOSE MARIA T. GECOSALA"],
 };
 
 const numberToWords = (num: number): string => {
@@ -198,7 +208,8 @@ const numberToWords = (num: number): string => {
 };
 
 
-const DocumentGeneratorTab: React.FC = () => {
+// FIX: Changed to a named export to resolve module resolution issues.
+export const DocumentGeneratorTab: React.FC = () => {
     const [activeDoc, setActiveDoc] = useState<DocumentType>('resolution');
     const [projectData, setProjectData] = useState<ProcurementProjectData>(initialProjectData);
     const [file, setFile] = useState<File | null>(null);
@@ -335,14 +346,15 @@ const DocumentGeneratorTab: React.FC = () => {
                 }
                 
                 if (extracted.items && extracted.items.length > 0) {
-                    updated.items = extracted.items.map((item, index) => ({
-                        itemNo: (item as any).itemNo || index + 1,
-                        description: item.description,
-                        qty: (item as any).qty || 0,
-                        uom: (item as any).uom || 'unit',
-                        unitCost: (item as any).unitCost || 0,
-                        totalCost: (item as any).totalCost || ((item as any).amount || 0),
-                        brandName: 'N/A'
+                    // @FIX: Completed mapping to include all required properties for ProcurementProjectItem and removed 'as any' casts.
+                    updated.items = (extracted.items || []).map((item, index): ProcurementProjectItem => ({
+                        itemNo: item.itemNo ?? index + 1,
+                        description: item.description ?? '',
+                        qty: item.qty ?? 0,
+                        uom: item.uom ?? 'unit',
+                        unitCost: item.unitCost ?? 0,
+                        totalCost: item.totalCost ?? 0,
+                        brandName: item.brandName ?? 'N/A'
                     }));
                      // Reset supplier bids to match new item structure
                     updated.suppliers.forEach(sup => {
@@ -830,6 +842,99 @@ const DocumentGeneratorTab: React.FC = () => {
         )
     };
 
+    const NtpContent = () => {
+        const winningBidder = getWinningBidder;
+        if (!winningBidder) return <div className="p-8 text-center text-red-600">No winning bidder found.</div>;
+
+        return (
+            <div className="prose prose-sm max-w-none font-serif leading-snug relative bg-white" style={{ fontFamily: "'Times New Roman', Times, serif", width: '8.5in', minHeight: '13in', padding: '1in', fontSize: `${fontSize}pt` }}>
+                <div className="watermark-container" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 0, overflow: 'hidden' }}><img src={bacolodCityLogo} alt="Watermark" style={{ width: '60%', height: 'auto', opacity: 0.08 }} /></div>
+                <div className="relative z-10">
+                    <div className="text-center">
+                        <img src={bacolodCityLogo} alt="Bacolod BAC Logo" className="h-20 mx-auto mb-2 header-logo" />
+                        <p>Republic of the Philippines<br/>City of Bacolod</p>
+                        <p className="font-bold mt-4">NOTICE TO PROCEED</p>
+                    </div>
+                    <p className="mt-8"><EditableInline initialValue={projectData.ntpDate || ''} onSave={v => handleDataChange('ntpDate', v)} /></p>
+                    <div className="mt-4">
+                        <p className="font-bold"><EditableInline initialValue={winningBidder.name} onSave={v => handleSupplierChange(0, 'name', v)} /></p>
+                        <p><EditableInline initialValue={winningBidder.address} onSave={v => handleSupplierChange(0, 'address', v)} /></p>
+                    </div>
+                    <p className="mt-4">Dear Sir/Madame:</p>
+                    <p className="mt-4 text-justify indent-8">The attached Contract Agreement having been approved, notice is hereby given to <strong className="font-bold">{winningBidder.name}</strong> to proceed on the project: <strong className="font-bold"><EditableTextarea initialValue={projectData.projectTitle} onSave={v => handleDataChange('projectTitle', v)} /></strong>, effective upon the date of your receipt of this notice.</p>
+                    <p className="mt-4 text-justify indent-8">Upon receipt of this notice, you are responsible for performing the services under the terms and conditions of the Agreement and in accordance with the Implementation Schedule.</p>
+                    <p className="mt-4 text-justify indent-8">Please acknowledge receipt and acceptance of this notice by signing both copies in the space provided below. Keep one copy and return the other to the City of Bacolod.</p>
+                    <p className="mt-8">Very truly yours,</p>
+                    <div className="mt-12">
+                        <p className="font-bold uppercase"><EditableInline initialValue={projectData.cityMayor} onSave={v => handleDataChange('cityMayor', v)} /></p>
+                        <p>City Mayor</p>
+                    </div>
+                    <div className="mt-12">
+                        <p>I acknowledge receipt of this Notice on ________________</p>
+                        <p className="mt-8 font-bold border-b border-black"><EditableInline initialValue={winningBidder.name} onSave={() => {}} /></p>
+                        <p>Name of the Representative of the Bidder</p>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const ContractContent = () => {
+        const winningBidder = getWinningBidder;
+        if (!winningBidder) return <div className="p-8 text-center text-red-600">No winning bidder found.</div>;
+        const totalAmount = winningBidder.totalBid;
+
+        return (
+            <div className="prose prose-sm max-w-none font-serif leading-snug relative bg-white" style={{ fontFamily: "'Times New Roman', Times, serif", width: '8.5in', minHeight: '13in', padding: '1in', fontSize: `${fontSize}pt` }}>
+                <div className="relative z-10">
+                    <h3 className="text-center font-bold">CONTRACT AGREEMENT</h3>
+                    <p className="text-center font-bold">FOR THE <EditableInline initialValue={projectData.projectTitle.toUpperCase()} onSave={v => handleDataChange('projectTitle', v)} /></p>
+
+                    <p className="mt-8 font-bold text-center">KNOW ALL MEN BY THESE PRESENTS:</p>
+                    <p className="mt-4 text-justify">This Contract is made and executed on this <EditableInline initialValue={projectData.contractDate || ''} onSave={v => handleDataChange('contractDate', v)} /> at <EditableInline initialValue={projectData.contractVenue || ''} onSave={v => handleDataChange('contractVenue', v)} />, by and between:</p>
+                    
+                    <p className="mt-4 text-justify indent-8"><strong className="font-bold">The CITY OF BACOLOD,</strong> a local government unit duly organized and existing under the laws of the Republic of the Philippines, with principal office at the Bacolod City Government Center, represented herein by its City Mayor, <strong className="font-bold"><EditableInline initialValue={projectData.cityMayor} onSave={v => handleDataChange('cityMayor', v)} /></strong>, hereinafter referred to as the <strong className="font-bold">“PROCURING ENTITY”</strong>;</p>
+                    <p className="text-center">- and -</p>
+                    <p className="mt-4 text-justify indent-8"><strong className="font-bold"><EditableInline initialValue={winningBidder.name} onSave={v => handleSupplierChange(0, 'name', v)} /></strong>, a corporation duly organized and existing under by virtue of the laws of the Republic of the Philippines, with principal office at <EditableInline initialValue={winningBidder.address} onSave={v => handleSupplierChange(0, 'address', v)} />, represented by its <EditableInline initialValue="Authorized Representative" onSave={() => {}} />, hereinafter referred to as the <strong className="font-bold">“SUPPLIER”</strong>.</p>
+                    
+                    <p className="text-center font-bold mt-4">WITNESSETH:</p>
+                    <p className="mt-4 text-justify"><strong className="font-bold">WHEREAS,</strong> the PROCURING ENTITY invited Bids for the <EditableInline initialValue={projectData.projectTitle} onSave={() => {}} />, and has accepted a Bid by the SUPPLIER for the supply of those goods and services in the sum of <strong className="font-bold">{numberToWords(totalAmount).toUpperCase()} (P {totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2})})</strong> (hereinafter called “the Contract Price”).</p>
+                    
+                    <p className="text-center font-bold mt-4">NOW THIS AGREEMENT WITNESSETH AS FOLLOWS:</p>
+                    <ol className="list-decimal list-inside text-justify space-y-2 mt-4">
+                        <li>In this Agreement words and expressions shall have the same meanings as are respectively assigned to them in the Conditions of Contract referred to.</li>
+                        <li>The following documents as required by the 2016 revised Implementing Rules and Regulations of Republic Act No. 9184 shall be deemed to form and be read and construed as integral part of this Agreement, viz: ...</li>
+                        <li>In consideration of the payments to be made by the PROCURING ENTITY to the SUPPLIER as hereinafter mentioned, the SUPPLIER hereby covenants with the PROCURING ENTITY to provide the goods and services and to remedy defects therein in conformity in all respects with the provisions of the Contract.</li>
+                        <li>The PROCURING ENTITY hereby covenants to pay the SUPPLIER in consideration of the provision of the goods and services and the remedying of defects therein, the Contract Price or such other sum as may become payable under the provisions of the contract at the time and in the manner prescribed by the contract.</li>
+                    </ol>
+
+                    <p className="mt-8 text-justify">IN WITNESS WHEREOF, the parties hereto have caused this Agreement to be executed in accordance with the laws of the Republic of the Philippines on the day and year first above written.</p>
+
+                    <div className="mt-12 flex justify-around">
+                        <div className="text-center">
+                            <p className="font-bold uppercase"><EditableInline initialValue={projectData.cityMayor} onSave={() => {}} /></p>
+                            <p>For the PROCURING ENTITY</p>
+                        </div>
+                        <div className="text-center">
+                            <p className="font-bold uppercase"><EditableInline initialValue={"AUTHORIZED REPRESENTATIVE"} onSave={() => {}} /></p>
+                            <p>For the SUPPLIER</p>
+                        </div>
+                    </div>
+
+                    <p className="text-center font-bold mt-8">WITNESSES</p>
+                    <div className="mt-12 flex justify-around">
+                        {projectData.witnesses?.map((witness, i) => (
+                             <div className="text-center" key={i}>
+                                <p className="font-bold uppercase border-b border-black px-8"><EditableInline initialValue={witness} onSave={v => { const w = [...(projectData.witnesses || [])]; w[i] = v; handleDataChange('witnesses', w);}} /></p>
+                            </div>
+                        ))}
+                    </div>
+
+                </div>
+            </div>
+        )
+    };
+    
     return (
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
             <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
@@ -859,7 +964,7 @@ const DocumentGeneratorTab: React.FC = () => {
             </div>
 
              <div className="flex justify-center border-b border-gray-200 mb-4">
-                {(['resolution', 'rfq', 'abstract', 'po', 'noa'] as DocumentType[]).map(doc => (
+                {(['resolution', 'rfq', 'abstract', 'po', 'noa', 'ntp', 'contract'] as DocumentType[]).map(doc => (
                     <button
                         key={doc}
                         onClick={() => setActiveDoc(doc)}
@@ -880,10 +985,10 @@ const DocumentGeneratorTab: React.FC = () => {
                     {activeDoc === 'abstract' && <AbstractContent />}
                     {activeDoc === 'po' && <PoContent />}
                     {activeDoc === 'noa' && <NoaContent />}
+                    {activeDoc === 'ntp' && <NtpContent />}
+                    {activeDoc === 'contract' && <ContractContent />}
                 </div>
             </div>
         </div>
     );
 };
-
-export default DocumentGeneratorTab;

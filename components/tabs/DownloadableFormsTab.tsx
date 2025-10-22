@@ -35,13 +35,13 @@ const formsData: FormData = {
                 },
                 {
                     name: 'Market Scoping Form',
-                    wordUrl: 'https://www.gppb.gov.ph/wp-content/uploads/2025/07/NGPA_Market-Scoping-Form.docx',
-                    pdfUrl: 'https://www.gppb.gov.ph/wp-content/uploads/2025/07/NGPA_Market-Scoping-Form.pdf'
+                    wordUrl: 'https://www.gppb.gov.ph/wp-content/uploads/2025/08/NGPA_Market-Scoping-Form.docx',
+                    pdfUrl: 'https://www.gppb.gov.ph/wp-content/uploads/2025/08/NGPA_Market-Scoping-Form.pdf'
                 },
                 {
                     name: 'Project Procurement Management Plan (PPMP)',
-                    wordUrl: 'https://www.gppb.gov.ph/wp-content/uploads/2025/07/NGPA_PPMP.xlsx',
-                    pdfUrl: 'https://www.gppb.gov.ph/wp-content/uploads/2025/07/NGPA_PPMP.pdf'
+                    wordUrl: 'https://www.gppb.gov.ph/wp-content/uploads/2025/08/NGPA_PPMP.xlsx',
+                    pdfUrl: 'https://www.gppb.gov.ph/wp-content/uploads/2025/08/NGPA_PPMP.pdf'
                 },
             ]
         },

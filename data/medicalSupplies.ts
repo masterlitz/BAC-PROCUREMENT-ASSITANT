@@ -1,6 +1,7 @@
 import { MarketItem } from '../types';
 import { medicalSupplies as items } from './items/medicalSupplies';
 import { prItems as newPrItems } from './items/medicalSupplies/pr_items';
+import { choLyingInPrItems } from './items/medicalSupplies/cho_lying_in_pr_items';
 
 // This data is preserved as it seems to be from a different source (CHO PR)
 const choPrItems: MarketItem[] = [
@@ -93,5 +94,6 @@ const choPrItems: MarketItem[] = [
 export const medicalSupplies: MarketItem[] = [
     ...items,
     ...choPrItems,
-    ...newPrItems
+    ...newPrItems,
+    ...choLyingInPrItems
 ];

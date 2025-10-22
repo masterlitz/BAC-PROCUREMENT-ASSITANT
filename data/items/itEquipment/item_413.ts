@@ -1,3 +1,4 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_413: MarketItem = { 
@@ -5,7 +6,7 @@ export const item_413: MarketItem = {
     name: "Computer Printer with scanner", 
     description: "A multi-function device that combines printing, high-resolution scanning, and copying capabilities. Perfect for office document management.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705020-00", 
     quantity: 60, 
     unit: "pc", 
     price: 22223.25, 

@@ -1,11 +1,12 @@
+
 import { MarketItem } from '../../../types';
 
 export const item_618: MarketItem = { 
     id: 618, 
-    name: "EPSON ECO TANK L18050 INK TANK PRINTER", 
+    name: "A3+ Ink Tank Photo Printer (6-Color)", 
     description: "An A3+ size 6-color photo printer with an integrated ink tank system, designed for photographers and businesses requiring high-quality, large-format prints at a low cost.", 
     category: "IT Equipment and Peripherals", 
-    uacsCode: "50203090-00", 
+    uacsCode: "10705020-00", 
     quantity: 15, 
     unit: "UNIT", 
     price: 15972.75, 

@@ -1,5 +1,6 @@
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
+import { useDraggableWindow } from '../../hooks/useDraggableWindow';
 
 interface BacAnalyticsTabProps {
     isVisible: boolean;
@@ -8,90 +9,20 @@ interface BacAnalyticsTabProps {
 
 const BacAnalyticsTab: React.FC<BacAnalyticsTabProps> = ({ isVisible, onClose }) => {
     const iframeSrc = "https://pages.hive.com/?shareToken=dpvt_aW2mx98Z4HuxKF3qX2DenMdzsui2DkzxATg8Mt5gFgWjy8cuMpDXSbtMdL78bXbZ";
-
-    const [isMaximized, setIsMaximized] = useState(false);
-    const [isMinimized, setIsMinimized] = useState(false);
-    const [position, setPosition] = useState({ x: 100, y: 100 });
-    const [size, setSize] = useState({ width: 800, height: 600 });
-    const [isDragging, setIsDragging] = useState(false);
-    const dragStartOffset = useRef({ x: 0, y: 0 });
-    const nodeRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (isVisible) {
-            setIsMaximized(false);
-            setIsMinimized(false);
-            const initialWidth = Math.min(1200, window.innerWidth * 0.8);
-            const initialHeight = Math.min(800, window.innerHeight * 0.8);
-            setSize({ width: initialWidth, height: initialHeight });
-            setPosition({
-                x: (window.innerWidth - initialWidth) / 2,
-                y: (window.innerHeight - initialHeight) / 2
-            });
-        }
-    }, [isVisible]);
-
-    const handleMouseMove = useCallback((e: MouseEvent) => {
-        if (!isDragging || !nodeRef.current) return;
-        
-        let newX = e.clientX - dragStartOffset.current.x;
-        let newY = e.clientY - dragStartOffset.current.y;
-
-        // Boundary checks to keep the window on screen
-        const { offsetWidth, offsetHeight } = nodeRef.current;
-        newX = Math.max(0, Math.min(newX, window.innerWidth - offsetWidth));
-        newY = Math.max(0, Math.min(newY, window.innerHeight - offsetHeight));
-
-        setPosition({ x: newX, y: newY });
-    }, [isDragging]);
-
-    const handleMouseUp = useCallback(() => {
-        setIsDragging(false);
-        document.body.style.userSelect = '';
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
-    }, [handleMouseMove]);
-
-    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault(); // Prevent default browser drag behavior
-        if (isMaximized || (e.target as HTMLElement).closest('button')) return;
-        setIsDragging(true);
-        dragStartOffset.current = {
-            x: e.clientX - position.x,
-            y: e.clientY - position.y,
-        };
-        document.body.style.userSelect = 'none';
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleMouseUp);
-    };
-
-    const toggleMaximize = () => {
-        setIsMaximized(!isMaximized);
-        if (isMinimized) setIsMinimized(false);
-    };
-
-    const toggleMinimize = () => {
-        setIsMinimized(!isMinimized);
-        if (isMaximized) setIsMaximized(false);
-    };
     
-    // Cleanup listeners on unmount
-    useEffect(() => {
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, [handleMouseMove, handleMouseUp]);
+    const { 
+        nodeRef, 
+        isMaximized, 
+        isMinimized, 
+        getWindowStyle, 
+        handleMouseDown, 
+        toggleMaximize, 
+        toggleMinimize 
+    } = useDraggableWindow(isVisible, { width: 1200, height: 800 });
 
     if (!isVisible) {
         return null;
     }
-
-    const windowStyle: React.CSSProperties = isMaximized ? {
-        top: '0', left: '0', width: '100vw', height: '100vh', borderRadius: 0,
-    } : {
-        top: `${position.y}px`, left: `${position.x}px`, width: `${size.width}px`, height: isMinimized ? 'auto' : `${size.height}px`,
-    };
 
     const CloseIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>;
     const MaximizeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4h4m12 4V4h-4M4 16v4h4m12-4v4h-4" /></svg>;
@@ -102,7 +33,7 @@ const BacAnalyticsTab: React.FC<BacAnalyticsTabProps> = ({ isVisible, onClose })
         <div 
             ref={nodeRef}
             className="fixed bg-white rounded-lg shadow-2xl flex flex-col z-50 overflow-hidden border border-gray-300 transition-all duration-300 ease-in-out"
-            style={windowStyle}
+            style={getWindowStyle()}
         >
             <div 
                 onMouseDown={handleMouseDown}

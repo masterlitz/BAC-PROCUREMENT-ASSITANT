@@ -1,3 +1,4 @@
+
 import { VariantMarketItem, MarketItem } from '../../../types';
 
 export const officeSuppliesCatalog: (VariantMarketItem | MarketItem)[] = [
@@ -83,7 +84,7 @@ export const officeSuppliesCatalog: (VariantMarketItem | MarketItem)[] = [
     },
     {
         id: 10011, isVariant: false, name: "Accountable Forms", description: "Official accountable forms for government transactions.",
-        category: "Office Supplies", uacsCode: "50203010-00", price: 500, unit: "Roll", quantity: 100, itemCode: "50203010-00-24", referenceLinks: []
+        category: "Office Supplies", uacsCode: "50203020-00", price: 500, unit: "Roll", quantity: 100, itemCode: "50203020-00-24", referenceLinks: []
     },
     {
         id: 10012, isVariant: true, name: "Acrylic Brochure Holder", baseDescription: "Clear acrylic holders for displaying brochures and flyers.",
@@ -110,7 +111,7 @@ export const officeSuppliesCatalog: (VariantMarketItem | MarketItem)[] = [
         category: "Office Supplies", uacsCode: "50203010-00", price: 205, unit: "Piece", quantity: 100, itemCode: "50203010-00-30", referenceLinks: []
     },
     {
-        id: 10016, isVariant: false, name: "Art Paper, 8.5 x 11, 10s", description: "Paper for art and craft projects.",
+        id: 10016, isVariant: false, name: "Art Paper, 8.5 x 11\", 10s", description: "Paper for art and craft projects.",
         category: "Office Supplies", uacsCode: "50203010-00", price: 30, unit: "Pack", quantity: 100, itemCode: "50203010-00-31", referenceLinks: []
     },
     {
@@ -133,10 +134,10 @@ export const officeSuppliesCatalog: (VariantMarketItem | MarketItem)[] = [
     },
     {
         id: 10019, isVariant: true, name: "Whiteboard, Aluminum Frame", baseDescription: "Whiteboards for presentations and notes.",
-        category: "Office Supplies", uacsCode: "50203010-00",
+        category: "Office Supplies", uacsCode: "50215030-00",
         variants: [
-            { itemCode: "50203010-00-38", description: "3 x 5 feet", price: 2900, unit: "Piece", stockStatus: "Available" },
-            { itemCode: "50203010-00-39", description: "2 x 3 feet", price: 1350, unit: "Piece", stockStatus: "Available" },
+            { itemCode: "50215030-00-38", description: "3 x 5 feet", price: 2900, unit: "Piece", stockStatus: "Available" },
+            { itemCode: "50215030-00-39", description: "2 x 3 feet", price: 1350, unit: "Piece", stockStatus: "Available" },
         ]
     },
     {
@@ -229,11 +230,11 @@ export const officeSuppliesCatalog: (VariantMarketItem | MarketItem)[] = [
     },
     {
         id: 10033, isVariant: true, name: "Corkboard", baseDescription: "Corkboards for pinning notes and announcements.",
-        category: "Office Supplies", uacsCode: "50203010-00",
+        category: "Office Supplies", uacsCode: "50215030-00",
         variants: [
-            { itemCode: "50203010-00-68", description: "2 x 3 feet, wooden frame", price: 760, unit: "Piece", stockStatus: "Available" },
-            { itemCode: "50203010-00-69", description: "3 x 5 feet, aluminum frame", price: 3210, unit: "Piece", stockStatus: "Available" },
-            { itemCode: "50203010-00-70", description: "2 x 4 feet, aluminum frame", price: 1650, unit: "Piece", stockStatus: "Available" },
+            { itemCode: "50215030-00-68", description: "2 x 3 feet, wooden frame", price: 760, unit: "Piece", stockStatus: "Available" },
+            { itemCode: "50215030-00-69", description: "3 x 5 feet, aluminum frame", price: 3210, unit: "Piece", stockStatus: "Available" },
+            { itemCode: "50215030-00-70", description: "2 x 4 feet, aluminum frame", price: 1650, unit: "Piece", stockStatus: "Available" },
         ]
     },
     {
@@ -268,7 +269,7 @@ export const officeSuppliesCatalog: (VariantMarketItem | MarketItem)[] = [
     },
     {
         id: 10039, isVariant: false, name: "Embosser, Handheld", description: "Handheld embosser for official seals.",
-        category: "Office Supplies", uacsCode: "50203010-00", price: 4150, unit: "Piece", quantity: 100, itemCode: "50203010-00-80", referenceLinks: []
+        category: "Office Supplies", uacsCode: "50215030-00", price: 4150, unit: "Piece", quantity: 100, itemCode: "50215030-00-80", referenceLinks: []
     },
     {
         id: 10040, isVariant: true, name: "Expanded Folder", baseDescription: "Expanding folder for organizing documents.",
